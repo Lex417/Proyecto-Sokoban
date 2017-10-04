@@ -1,0 +1,5 @@
+﻿  Ventana.cpp
+c:\users\leonardo hidalgo\desktop\clases\ii ciclo 2017\estructuras de datos\proyecto sokoban\proyecto sokoban\ventana.cpp(1746): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+c:\users\leonardo hidalgo\desktop\clases\ii ciclo 2017\estructuras de datos\proyecto sokoban\proyecto sokoban\ventana.cpp(99): warning C4715: 'Ventana::inicializar': not all control paths return a value
+  Proyecto Sokoban.vcxproj -> C:\Users\Leonardo Hidalgo\Desktop\Clases\II Ciclo 2017\Estructuras de Datos\Proyecto Sokoban\Debug\Proyecto Sokoban.exe
+  Proyecto Sokoban.vcxproj -> C:\Users\Leonardo Hidalgo\Desktop\Clases\II Ciclo 2017\Estructuras de Datos\Proyecto Sokoban\Debug\Proyecto Sokoban.pdb (Partial PDB)
