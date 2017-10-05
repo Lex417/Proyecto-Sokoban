@@ -1,0 +1,9 @@
+﻿  main.cpp
+c:\users\leonardo hidalgo\documents\github\proyecto-estructuras\proyecto sokoban\main.cpp(2): fatal error C1083: Cannot open include file: 'SFML/Graphics.hpp': No such file or directory
+  Ventana.cpp
+c:\users\leonardo hidalgo\documents\github\proyecto-estructuras\proyecto sokoban\ventana.h(3): fatal error C1083: Cannot open include file: 'SFML/Graphics.hpp': No such file or directory
+  Menu.cpp
+c:\users\leonardo hidalgo\documents\github\proyecto-estructuras\proyecto sokoban\menu.h(1): fatal error C1083: Cannot open include file: 'SFML/Graphics.hpp': No such file or directory
+  Lista.cpp
+c:\users\leonardo hidalgo\documents\github\proyecto-estructuras\proyecto sokoban\lista.h(1): fatal error C1083: Cannot open include file: 'SFML/Graphics.hpp': No such file or directory
+  Generating Code...

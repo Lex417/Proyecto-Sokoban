@@ -17,18 +17,21 @@ Menu::Menu(float ancho, float largo)
 	menu[0].setFont(font);
 	menu[0].setColor(Color::Cyan);
 	menu[0].setString("Start!");
-	menu[0].setPosition(Vector2f((ancho / 2) -55 , largo / (POSICIONES) * 1));
-	opcion.setPosition(menu[0].getPosition().x -52, menu[0].getPosition().y);
+	menu[0].setCharacterSize(35);
+	menu[0].setPosition(Vector2f((ancho / 2) -66 , largo / (misOpciones)+50 * 1));
+	opcion.setPosition(menu[0].getPosition().x -50, menu[0].getPosition().y);
+
 	menu[1].setFont(font);
 	menu[1].setColor(Color::White);
 	menu[1].setString("Load");
-	menu[1].setPosition(Vector2f((ancho / 2) - 46, largo / (POSICIONES + 1) * 2));
+	menu[1].setCharacterSize(35);
+	menu[1].setPosition(Vector2f((ancho / 2) - 54, largo / (misOpciones + 1) * 2));
 
 
 	menu[2].setFont(font);
 	menu[2].setColor(Color::White);
 	menu[2].setString("Quit");
-	menu[2].setPosition(Vector2f((ancho / 2)-40, largo / (POSICIONES + 1) * 3));
+	menu[2].setPosition(Vector2f((ancho / 2)-40, largo / (misOpciones + 1) * 3));
 
 
 	titulo.setFont(font);
@@ -48,7 +51,7 @@ Menu::~Menu()
 
 void Menu::draw(sf::RenderWindow &window)
 {
-	for (int i = 0; i < POSICIONES; i++)
+	for (int i = 0; i < misOpciones; i++)
 	{
 		window.draw(menu[i]);
 
@@ -73,7 +76,7 @@ void Menu::MoveUp()
 
 void Menu::MoveDown()
 {
-	if (opcionSeleccionada + 1 < POSICIONES)
+	if (opcionSeleccionada + 1 < misOpciones)
 	{
 
 		menu[opcionSeleccionada].setColor(Color::White);

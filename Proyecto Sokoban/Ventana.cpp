@@ -74,21 +74,26 @@ int Ventana::inicializar() {
 	opciones[0].setFont(font);
 	opciones[0].setCharacterSize(20);
 	opciones[0].setColor(Color::Black);
-	opciones[0].setString("F1. Restart");
-	opciones[0].setPosition(Vector2f(40.f, 580.f));
+	opciones[0].setString("[SpaceBar to Restart");
+	opciones[0].setPosition(Vector2f(570.f, 250.f));
 
 	opciones[1].setFont(font);
 	opciones[1].setCharacterSize(20);
 	opciones[1].setColor(Color::Black);
-	opciones[1].setString("F2. Menu");
-	opciones[1].setPosition(Vector2f(250.f, 580.f));
+	opciones[1].setString("[BackSpace] to Menu");
+	opciones[1].setPosition(Vector2f(585.f, 320.f));
 
 	opciones[2].setFont(font);
 	opciones[2].setCharacterSize(20);
 	opciones[2].setColor(Color::Black);
-	opciones[2].setString("F3. Quit");
-	opciones[2].setPosition(Vector2f(430.f, 580.f));
+	opciones[2].setString("[Escape] to Quit");
+	opciones[2].setPosition(Vector2f(624.f, 390.f));
 
+	opciones[3].setFont(font);
+	opciones[3].setCharacterSize(20);
+	opciones[3].setColor(Color::Black);
+	opciones[3].setString("Move around with arrows or WASD");
+	opciones[3].setPosition(Vector2f(20.f, 580.f));
 
 	Level.setFont(font);
 	Level.setCharacterSize(60);
@@ -109,7 +114,7 @@ void Ventana::LosEventos() {
 	}
 
 	//Movimiento del Sprite
-	if (Keyboard::isKeyPressed(Keyboard::Up)) {
+	if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up)) {
 		system("cls");
 		cout << "Arriba" << endl;
 
@@ -354,7 +359,7 @@ void Ventana::LosEventos() {
 	}// Fin de presionar arriba
 
 
-	if (Keyboard::isKeyPressed(Keyboard::Left)) {
+	if (Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::Left)) {
 		system("cls");
 		cout << "Izquierda" << endl;
 
@@ -415,7 +420,7 @@ void Ventana::LosEventos() {
 	}//Presionar Izquierda
 
 
-	if (Keyboard::isKeyPressed(Keyboard::Down)) {
+	if (Keyboard::isKeyPressed(Keyboard::S) || Keyboard::isKeyPressed(Keyboard::Down)) {
 		system("cls");
 		cout << "Abajo" << endl;						//SUCEDE LO MISMO QUE PARA SUBIR, SOLO QUE AL CONTRARIA
 														//PREGUNTO SI LA LISTA DE ABAJO ME PERMITE BAJAR
@@ -658,7 +663,7 @@ void Ventana::LosEventos() {
 	}//Boton abajo
 
 
-	if (Keyboard::isKeyPressed(Keyboard::Right)) {
+	if (Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::Right)) {
 		system("cls");
 		cout << "Derecha" << endl;
 
@@ -718,7 +723,7 @@ void Ventana::LosEventos() {
 	}//fin boton presionado derecha
 
 	 //PRESIONAR PARA REINICIAR
-	if (Keyboard::isKeyPressed(Keyboard::F1)) {
+	if (Keyboard::isKeyPressed(Keyboard::LShift)){
 		for (int i = 0; i < 9; i++) {			//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
 
 			L1.Borrar();
@@ -735,7 +740,7 @@ void Ventana::LosEventos() {
 		LlenarListas();							//SE VUELVEN A LLENAR LAS LISTAS
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::F2)) {	// SE RETORNA AL MENU PRINCIPAL BORRANDO TODAS LAS LISTAS
+	if (Keyboard::isKeyPressed(Keyboard::BackSpace)){ //SE RETORNA AL MENU PRINCIPAL BORRANDO TODAS LAS LISTAS
 		for (int i = 0; i < 9; i++) {
 
 			L1.Borrar();
@@ -756,7 +761,7 @@ void Ventana::LosEventos() {
 		iniciarMenu();
 	}
 
-	if (Keyboard::isKeyPressed(Keyboard::F3)) {
+	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 		VentanaPrincipal.close();					//SE CIERRA LA VENTANA Y SE SALE DEL JUEGO
 	}
 
@@ -1203,7 +1208,7 @@ void Ventana::render() {
 		}
 	}
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		VentanaPrincipal.draw(opciones[i]);			//SE DIBUJAN LAS OPCIONES DE REINICAR, VOLVER AL MENU Y SALIR
 	}
 	VentanaPrincipal.draw(Level);					//SE DIBUJA EL NUMERO DEL NIVEL
@@ -1761,6 +1766,14 @@ void Ventana::iniciarMenu() {
 					break;
 
 				case sf::Keyboard::Down:
+					menu.MoveDown();
+					break;
+
+				case sf::Keyboard::W:
+					menu.MoveUp();
+					break;
+
+				case sf::Keyboard::S:
 					menu.MoveDown();
 					break;
 

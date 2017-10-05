@@ -1,15 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-using namespace std;
-using namespace sf;
 
+using namespace sf;
+using std::cout;
+using std::endl;
 
 
 struct Nodo {
 
-	Nodo *siguiente;
-	Nodo *anterior;
-	int tipoPosicion;				//LOS NODOS SOLO TENDRAN UN NUMERO Y DEPENDE DE ESTE SE PINTARÁ EN LA VENTANA
+	int tipoPosicion;
+	Nodo *next;
+	Nodo *prev;
+					//LOS NODOS SOLO TENDRAN UN NUMERO Y DEPENDE DE ESTE SE PINTARÁ EN LA VENTANA
 
 };
 

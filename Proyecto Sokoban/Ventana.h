@@ -7,7 +7,11 @@
 #include <fstream>
 
 using namespace sf;
-using namespace std;
+using std::cout;
+using std::endl;
+using std::cin;
+using std::ifstream;
+using std::ios;
 
 class Ventana {
 private:
@@ -28,7 +32,7 @@ private:
 	Sprite Ganar;
 	Sprite Disponible;
 	Font font;
-	Text opciones[3];
+	Text opciones[4];
 	Text Level;
 
 	Event eventos;

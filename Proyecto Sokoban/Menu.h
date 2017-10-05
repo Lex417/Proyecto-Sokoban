@@ -1,7 +1,10 @@
 #include "SFML/Graphics.hpp"
+
 using namespace sf;
-using namespace std;
-#define POSICIONES 3
+
+
+#define misOpciones 3
+
 class Menu
 {
 public:
@@ -15,7 +18,7 @@ public:
 private:
 	int opcionSeleccionada;
 	Font font;
-	Text menu[POSICIONES];
+	Text menu[misOpciones];
 	Text titulo;
 	Texture imagen;
 	Sprite opcion;
