@@ -1,7 +1,7 @@
 #include "Menu.h"
 
 
-Menu::Menu(float ancho, float largo)
+Menu::Menu(float ancho, float largo) 
 {
 	if (!font.loadFromFile("SuperRetro54.ttf"))
 	{
@@ -9,10 +9,22 @@ Menu::Menu(float ancho, float largo)
 
 	}
 
-	if (!imagen.loadFromFile("Character4.png")) {
+	if (!imagen.loadFromFile("Character4.png")) 
+	{
+		system("No se ha encontrado el font&pause");
+	}
+
+	if (!imagen.loadFromFile("Character4.png")) 
+	{
+		system("No se ha encontrado el font&pause");
+	}
+	if (!fondo.loadFromFile("City.png"))
+	{
 		system("No se ha encontrado el font&pause");
 	}
 	opcion.setTexture(imagen);
+	miFondo.setTexture(fondo);
+	
 
 	menu[0].setFont(font);
 	menu[0].setColor(Color::Cyan);
@@ -51,13 +63,16 @@ Menu::~Menu()
 
 void Menu::draw(sf::RenderWindow &window)
 {
+	window.draw(miFondo);
 	for (int i = 0; i < misOpciones; i++)
 	{
 		window.draw(menu[i]);
 
 	}
+	
 	window.draw(opcion);
 	window.draw(titulo);
+		
 
 }
 

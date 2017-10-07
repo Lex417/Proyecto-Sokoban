@@ -25,7 +25,6 @@ int Ventana::inicializar() {
 	}
 	LaPared.setTexture(Pared);
 
-
 	if (!EspacioLibre.loadFromFile("GroundGravel_Concrete.png")) {
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
@@ -70,33 +69,38 @@ int Ventana::inicializar() {
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
+	if (!Red.loadFromFile("Red_skin.png")) {
+		system("No se ha encontrado la imagen&pause");
+		return EXIT_FAILURE;
+	}
+	PokemonRed.setTexture(Red);
 
 	opciones[0].setFont(font);
 	opciones[0].setCharacterSize(20);
 	opciones[0].setColor(Color::Black);
-	opciones[0].setString("[SpaceBar to Restart");
-	opciones[0].setPosition(Vector2f(570.f, 250.f));
+	opciones[0].setString("[Shift to Restart");
+	opciones[0].setPosition(Vector2f(20.f, 610.f));
 
 	opciones[1].setFont(font);
 	opciones[1].setCharacterSize(20);
 	opciones[1].setColor(Color::Black);
 	opciones[1].setString("[BackSpace] to Menu");
-	opciones[1].setPosition(Vector2f(585.f, 320.f));
+	opciones[1].setPosition(Vector2f(20.f, 580.f));
 
 	opciones[2].setFont(font);
 	opciones[2].setCharacterSize(20);
 	opciones[2].setColor(Color::Black);
 	opciones[2].setString("[Escape] to Quit");
-	opciones[2].setPosition(Vector2f(624.f, 390.f));
+	opciones[2].setPosition(Vector2f(600.f, 600.f));
 
 	opciones[3].setFont(font);
 	opciones[3].setCharacterSize(20);
 	opciones[3].setColor(Color::Black);
-	opciones[3].setString("Move around with arrows or WASD");
-	opciones[3].setPosition(Vector2f(20.f, 580.f));
+	opciones[3].setString("Move with arrows or WASD");
+	opciones[3].setPosition(Vector2f(20.f, 550.f));
 
 	Level.setFont(font);
-	Level.setCharacterSize(60);
+	Level.setCharacterSize(55);
 	Level.setColor(Color(178,34 ,34));
 	Level.setPosition(Vector2f(580.f, 40.f));
 
@@ -792,7 +796,7 @@ void Ventana::update() {
 
 	else if (!completo2) {									//SI EL NIVEL 2 NO HA SIDO COMPLETADO
 
-		completo2 = ListaGanadora.ganar(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 2 SE COMPLETÓ
+		completo2 = ListaGanadora.ganar2(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 2 SE COMPLETÓ
 		if (completo2) {											//SI ES ASÍ
 			for (int i = 0; i < 9; i++) {							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
 
@@ -813,7 +817,7 @@ void Ventana::update() {
 
 	else if (!completo3) {
 
-		completo3 = ListaGanadora.ganar(ListaGanadora, ganar1);
+		completo3 = ListaGanadora.ganar2(ListaGanadora, ganar1);
 		if (completo3) {
 			for (int i = 0; i < 9; i++) {
 
@@ -888,6 +892,9 @@ void Ventana::render() {
 	VentanaPrincipal.clear(Color(250, 235, 215));
 	//ventana un for para recorrer la lista y 
 	//for donde voy recorriendo la lista
+
+	PokemonRed.setPosition(600.f, 125.f);
+	VentanaPrincipal.draw(PokemonRed);
 
 
 	int x = 0;						//VARIABLE GLOBAL PARA EL METODO QUE SETTEARÁ LA POSICION "Y" DEL OBJETO
@@ -1242,7 +1249,7 @@ void Ventana::cleared() {
 void Ventana::LlenarListas() {
 
 	if (!completo1) {					//SI EL NIVEL 1 NO HA SIDO COMPLETADO
-		Level.setString("Nivel 1");
+		Level.setString("Level 1");
 		ifstream Nivel1;
 
 		Nivel1.open("Nivel 1.txt", ios::in);
@@ -1339,7 +1346,7 @@ void Ventana::LlenarListas() {
 	}//NIVEL 1 COMPLETADO
 
 	else if (!completo2) {								//SI EL NIVEL 1 ESTÁ COMPLETO  Y EL NIVEL 2 N0..., SE REALIZA EL MISMO RECORRIDO 
-		Level.setString("Nivel 2");						//LEYENDO EL ARCHIVO DEL NIVEL 2
+		Level.setString("Level 2");						//LEYENDO EL ARCHIVO DEL NIVEL 2
 		ifstream Nivel2;
 		Nivel2.open("Nivel 2.txt", ios::in);
 		if (Nivel2.is_open()) {
@@ -1435,7 +1442,7 @@ void Ventana::LlenarListas() {
 	}//NIVEL 2 COMPLETADO
 
 	else if (!completo3) {						//SI EL NIVEL 1 Y 2 ESTÁN COMPLETOS  Y EL NIVEL 3 N0..., SE REALIZA EL MISMO RECORRIDO 
-		Level.setString("Nivel 3");				//LEYENDO EL ARCHIVO DEL NIVEL 3
+		Level.setString("Level 3");				//LEYENDO EL ARCHIVO DEL NIVEL 3
 		ifstream Nivel3;
 		Nivel3.open("Nivel 3.txt", ios::in);
 		if (Nivel3.is_open()) {
@@ -1532,7 +1539,7 @@ void Ventana::LlenarListas() {
 
 	else if (!completo4) {						//SI EL NIVEL 1 Y 2 Y 3 ESTÁN COMPLETOS  Y EL NIVEL 4 N0..., SE REALIZA EL MISMO RECORRIDO 
 		ifstream Nivel4;						//LEYENDO EL ARCHIVO DEL NIVEL 4
-		Level.setString("Nivel 4");
+		Level.setString("Level 4");
 		Nivel4.open("Nivel 4.txt", ios::in);
 		if (Nivel4.is_open()) {
 			int c;
@@ -1627,7 +1634,7 @@ void Ventana::LlenarListas() {
 	}//NIVEL 4 COMPLETADO
 
 	else if (!completo5) {					//SI EL NIVEL 1 Y 2 Y 3 Y 4 ESTÁN COMPLETOS  Y EL NIVEL 5 N0..., SE REALIZA EL MISMO RECORRIDO 
-		Level.setString("Nivel 5");			//LEYENDO EL ARCHIVO DEL NIVEL 5
+		Level.setString("Level 5");			//LEYENDO EL ARCHIVO DEL NIVEL 5
 		ifstream Nivel5;
 		Nivel5.open("Nivel 5.txt", ios::in);
 		if (Nivel5.is_open()) {
@@ -1859,6 +1866,7 @@ void Ventana::iniciarMenu() {
 		}
 
 		VentanaPrincipal.clear(Color(72, 61,139));
+		
 
 		menu.draw(VentanaPrincipal);
 		VentanaPrincipal.display();

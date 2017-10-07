@@ -17,10 +17,6 @@ struct Nodo {
 
 class Lista {
 
-
-private:
-	Nodo *inicio;
-
 public:
 	Lista();
 	void insertar(int i);
@@ -31,4 +27,11 @@ public:
 	void CambiarEstado(int, int);
 	void Borrar();
 	bool ganar(Lista, int);
+	bool ganar2(Lista, int);
+
+
+private:
+	Nodo *inicio;
+	Nodo *temp;
+
 };

@@ -25,12 +25,14 @@ private:
 	Texture JugadorIzq;
 	Texture PuntoGanar;
 	Texture EspacioLibre;
+	Texture Red;
 
 	Sprite LaPared;
 	Sprite LaCaja;
 	Sprite ElJugador;
 	Sprite Ganar;
 	Sprite Disponible;
+	Sprite PokemonRed;
 	Font font;
 	Text opciones[4];
 	Text Level;

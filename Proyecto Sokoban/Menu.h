@@ -1,9 +1,7 @@
 #include "SFML/Graphics.hpp"
-
+#define misOpciones 3
 using namespace sf;
 
-
-#define misOpciones 3
 
 class Menu
 {
@@ -21,6 +19,8 @@ private:
 	Text menu[misOpciones];
 	Text titulo;
 	Texture imagen;
+	Texture fondo;
 	Sprite opcion;
+	Sprite miFondo;
 
 };
