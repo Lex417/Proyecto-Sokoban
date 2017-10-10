@@ -8,18 +8,17 @@ using std::endl;
 
 struct Nodo {
 
-	int tipoPosicion;
+	int objectID;
 	Nodo *next;
 	Nodo *prev;
 					//LOS NODOS SOLO TENDRAN UN NUMERO Y DEPENDE DE ESTE SE PINTARÁ EN LA VENTANA
-
 };
 
 class Lista {
 
 public:
 	Lista();
-	void insertar(int i);
+	void insert(int i);
 	int getTipo(int);
 	bool Movimiento(int);
 	bool MovimientoDerecha(int);
@@ -31,7 +30,7 @@ public:
 
 
 private:
-	Nodo *inicio;
+	Nodo *first;
 	Nodo *temp;
 
 };

@@ -1,23 +1,23 @@
 #include "Lista.h"
 
 Lista::Lista() {
-	inicio = nullptr;
+	first = nullptr;
 	temp = nullptr;
 }
 
-void Lista::insertar(int v) 
+void Lista::insert(int v) 
 {
 
-	temp = inicio;
+	temp = first;
 	Nodo *nuevo = new Nodo();
 
-	nuevo->tipoPosicion = v;
+	nuevo->objectID = v;
 	nuevo->next = nullptr;
 	nuevo->prev = nullptr;
 
-	if (inicio == nullptr)
+	if (first == nullptr)
 	{
-		inicio = nuevo;
+		first = nuevo;
 
 		return;
 	}
@@ -34,13 +34,13 @@ void Lista::insertar(int v)
 int Lista::getTipo(int num)
 {
 
-	temp = inicio;
+	temp = first;
 
 
 	for (int i = 0; i<9; i++)
 	{		//ME MUEVO POR LOS 9 NODOS DE LA LISTA
 		if (i == num) 			//SI ALGUNA POSICION COINCIDE CON EL NUMERO ENVIADO (QUE SERIA EL NODO DE LA POSICION EN LA QUE ESTOY
-			return temp->tipoPosicion;		//RETORNO EL NUMERO QUE TIENE EL NODO
+			return temp->objectID;		//RETORNO EL NUMERO QUE TIENE EL NODO
 		
 		temp = temp->next;
 	}
@@ -50,22 +50,22 @@ int Lista::getTipo(int num)
 
 bool Lista::Movimiento(int numeroNodo)
 {
-	temp = inicio;
+	temp = first;
 
 	for (int i = 0; i < numeroNodo; i++) 
 		temp = temp->next;					//ME POSICIONO EN LA POSICION DEL NODO EN EL QUE ESTOY
 	
 
 
-	if (temp->tipoPosicion == 3) 					//SI EL NUMERO EN LA POSICION DEL NODO ES UN 3 (MURO)
+	if (temp->objectID == 3) 					//SI EL NUMERO EN LA POSICION DEL NODO ES UN 3 (MURO)
 		return false;								//NO SE PUEDE MOVER
 	
 
-	else if (temp->tipoPosicion == 2) 				//SI EL NUMERO EN LA POSICION DEL NODO ES UN 2 (CAJA)
+	else if (temp->objectID == 2) 				//SI EL NUMERO EN LA POSICION DEL NODO ES UN 2 (CAJA)
 		return false;									//NO SE PUEDE MOVER
 
 	
-	else if (temp->tipoPosicion == 0 || temp->tipoPosicion == 4) 	//SI EL NUMERO EN LA POSICION DEL NODO ES UN 0 (LIBRE) o 4(LUGAR DE GANAR)
+	else if (temp->objectID == 0 || temp->objectID == 4) 	//SI EL NUMERO EN LA POSICION DEL NODO ES UN 0 (LIBRE) o 4(LUGAR DE GANAR)
 		return true;
 	
 
@@ -75,58 +75,58 @@ bool Lista::Movimiento(int numeroNodo)
 bool Lista::MovimientoDerecha(int numeroNodo)
 {
 
-	temp = inicio;
+	temp = first;
 
 	for (int i = 0; i < numeroNodo; i++) 
 		temp = temp->next;						//ME POSICIONO EN EL NODO EN EL QUE ESTOY
 	
 
-	if (temp->next->tipoPosicion == 3) 			//SI EL NUMERO DEL NODO EN EL QUE ESTOY ES UN 3 (MURO)
+	if (temp->next->objectID == 3) 			//SI EL NUMERO DEL NODO EN EL QUE ESTOY ES UN 3 (MURO)
 		return false;									//NO ME PUEDO MOVER
 	
 
-	else if (temp->next->tipoPosicion == 2)
+	else if (temp->next->objectID == 2)
 	{													//SI EL NUMERO DEL NODO EN EL QUE ESTOY ES UN 2 (CAJA)
-		if (temp->next->next->tipoPosicion == 3) 	//Y SI LA SIGUIENTE A LA DERECHA ES UN MURO
+		if (temp->next->next->objectID == 3) 	//Y SI LA SIGUIENTE A LA DERECHA ES UN MURO
 			return false;										//NO SE PUEDE MOVER
 		
-		else if (temp->next->next->tipoPosicion == 2) 	//Y SI LA SIGUIENTE A LA DERECHA TAMBIEN ES UNA CAJA
+		else if (temp->next->next->objectID == 2) 	//Y SI LA SIGUIENTE A LA DERECHA TAMBIEN ES UNA CAJA
 			return false;											//NO SE PUEDE MOVER
 		
 		else 
 		{
-			temp->tipoPosicion = 0;								//SI ES UN ESPACIO LIBRE O UN PUNTO GANAR
-			temp->next->tipoPosicion = 1;					//LO SIGUIENTE A LA DERECHA ES UN JUGADOR
-			temp->next->next->tipoPosicion = 2;		//LO SIGUIENTE AL JUGADOR ES LA CAJA
+			temp->objectID = 0;								//SI ES UN ESPACIO LIBRE O UN PUNTO GANAR
+			temp->next->objectID = 1;					//LO SIGUIENTE A LA DERECHA ES UN JUGADOR
+			temp->next->next->objectID = 2;		//LO SIGUIENTE AL JUGADOR ES LA CAJA
 			return true;										// SI ME PUEDO MOVER
 		}
 	}
-	else if (temp->next->tipoPosicion == 0) 
+	else if (temp->next->objectID == 0)
 	{														//SI LA POSICION ES LIBRE
-		temp->next->tipoPosicion = 1;						// LO SIGUIENTE ES EL JUGADOR
-		temp->tipoPosicion = 0;									//EN DONDE ESTOY PASA A SER UN ESPACIO LIBRE
+		temp->next->objectID = 1;						// LO SIGUIENTE ES EL JUGADOR
+		temp->objectID = 0;									//EN DONDE ESTOY PASA A SER UN ESPACIO LIBRE
 		return true;											//SI ME PUEDO MOVER
 	}
 
 
 
-	if (temp->prev->tipoPosicion == 4 && temp->next->tipoPosicion == 4) 
+	if (temp->prev->objectID == 4 && temp->next->objectID == 4)
 	{																	// SI ES UN PUNTO DE GANE
-		temp->next->tipoPosicion = 1;
-		temp->tipoPosicion = 4;
+		temp->next->objectID = 1;
+		temp->objectID = 4;
 		return true;
 
 	}
-	else if (temp->next->next->next->tipoPosicion == 4)
+	else if (temp->next->next->next->objectID == 4)
 	{
-		temp->next->tipoPosicion = 1;
-		temp->tipoPosicion = 0;
+		temp->next->objectID = 1;
+		temp->objectID = 0;
 		return true;
 	}
 	else
 	{
-		temp->next->tipoPosicion = 1;
-		temp->tipoPosicion = 4;
+		temp->next->objectID = 1;
+		temp->objectID = 4;
 		return true;
 	}
 
@@ -135,52 +135,52 @@ bool Lista::MovimientoDerecha(int numeroNodo)
 bool Lista::MovimientoIzquierda(int numeroNodo) 
 {
 	//LO MISMO DE LA DERECHA SOLO QUE SE PREGUNTA POR EL ANTERIOR
-	temp = inicio;
+	temp = first;
 
 	for (int i = 0; i < numeroNodo; i++) 
 		temp = temp->next;
 	
 
-	if (temp->prev->tipoPosicion == 3) 
+	if (temp->prev->objectID == 3)
 		return false;
 	
-	else if (temp->prev->tipoPosicion == 2) 
+	else if (temp->prev->objectID == 2)
 	{
-		if (temp->prev->prev->tipoPosicion == 3) 
+		if (temp->prev->prev->objectID == 3)
 			return false;
 		
-		else if (temp->prev->prev->tipoPosicion == 2) 
+		else if (temp->prev->prev->objectID == 2)
 			return false;
 		
 
 		else
 		{
-			temp->tipoPosicion = 0;
-			temp->prev->tipoPosicion = 1;
-			temp->prev->prev->tipoPosicion = 2;
+			temp->objectID = 0;
+			temp->prev->objectID = 1;
+			temp->prev->prev->objectID = 2;
 			return true;
 		}
 	}
-	else if (temp->prev->tipoPosicion == 0) 
+	else if (temp->prev->objectID == 0)
 	{
-		temp->prev->tipoPosicion = 1;
-		temp->tipoPosicion = 0;
+		temp->prev->objectID = 1;
+		temp->objectID = 0;
 		return true;
 	}
 
 
 
 
-	if (temp->prev->prev->tipoPosicion == 4) 
+	if (temp->prev->prev->objectID == 4)
 	{
-		temp->prev->tipoPosicion = 1;
-		temp->tipoPosicion = 4;
+		temp->prev->objectID = 1;
+		temp->objectID = 4;
 		return true;
 	}
 	else 
 	{
-		temp->prev->tipoPosicion = 1;
-		temp->tipoPosicion = 4;
+		temp->prev->objectID = 1;
+		temp->objectID = 4;
 		return true;
 	}
 
@@ -190,32 +190,32 @@ bool Lista::MovimientoIzquierda(int numeroNodo)
 void Lista::CambiarEstado(int numeroNodo, int actualizar) 
 {
 
-	temp = inicio;
+	temp = first;
 
 	for (int i = 0; i < numeroNodo; i++) 
 		temp = temp->next;					//ME POSICIONO EN EL NODO EN EL QUE ESTOY
 	
 
-	temp->tipoPosicion = actualizar;				//SE ACTUALIZA EL NUMERO DEL NODO EN EL QUE ESTOY
+	temp->objectID = actualizar;				//SE ACTUALIZA EL NUMERO DEL NODO EN EL QUE ESTOY
 
 }
 
 bool Lista::ganar(Lista L, int numero) 
 {
 
-	temp = inicio;
+	temp = first;
 
 	for (int i = 1; i < 9; i++) {			//VOY RECCORIENDO LOS NODOS
 		if (i == numero) 
 		{
-			if (temp->tipoPosicion == 2 && temp->prev->tipoPosicion == 2 && temp->prev->prev->tipoPosicion == 2  ) 
+			if (temp->objectID == 2 && temp->prev->objectID == 2 && temp->prev->prev->objectID == 2  )
 			{														//SI EL PUNTO DE GANAR TIENE UN 2(CAJA) Y EL ANTERIOR TAMBIEN, Y EL ANTERIOR DEL ANTERIOR TAMBIEN ES UN 2
-				cout << "'Has completado el nivel!" << endl;	
+				cout << " Felicidades !! Has completado el nivel!" << endl;	
 				return true;							//EL NIVEL PASA A ESTAR COMPLETO
 			}
-			else if (temp->tipoPosicion == 2 && temp->prev->prev->tipoPosicion == 2)
+			else if (temp->objectID == 2 && temp->prev->prev->objectID == 2)
 			{
-				cout << "Has completado el nivel!" << endl;
+				cout << " Felicidades !! Has completado el nivel!" << endl;
 				return true;
 			}
 
@@ -233,15 +233,15 @@ bool Lista::ganar2(Lista L, int numero)
 {
 
 
-	temp = inicio;
+	temp = first;
 
 	for (int i = 1; i < 9; i++) 
 	{			//VOY RECCORIENDO LOS NODOS
 		if (i == numero) 
 		{
-			if (temp->tipoPosicion == 2 && temp->prev->tipoPosicion == 2 && temp->prev->prev->prev->prev->prev->prev->tipoPosicion == 2)
+			if (temp->objectID == 2 && temp->prev->objectID == 2 && temp->prev->prev->prev->prev->prev->prev->objectID == 2)
 			{
-				cout << "Has completado el nivel!" << endl;
+				cout << " Felicidades !! Has completado el nivel!" << endl;
 				return true;
 			}											//EL NIVEL PASA A ESTAR COMPLETO
 		
@@ -257,25 +257,25 @@ bool Lista::ganar2(Lista L, int numero)
 void Lista::Borrar()
 {
 
-	if (inicio == nullptr) 
+	if (first == nullptr)
 	{
 		cout << "La lista esta vacia" << endl;
 		return;
 	}
 
-	Nodo * nodo = inicio;
+	Nodo * nodo = first;
 
 
 
 	//Si es el primero de la lista
-	inicio = inicio->next;
-	if (inicio == nullptr) 
+	first = first->next;
+	if (first == nullptr)
 	{
 
 		delete nodo;
 		return;
 	}
-	inicio->prev = nullptr;
+	first->prev = nullptr;
 	delete nodo;
 
 }

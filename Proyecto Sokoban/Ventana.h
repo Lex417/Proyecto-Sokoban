@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include <sstream>
 #include <fstream>
+#include <Windows.h>
 
 using namespace sf;
 using std::cout;
@@ -52,6 +53,7 @@ private:
 
 	int lista, nodo, temporal, ganar1;
 	bool completo1, completo2, completo3, completo4, completo5;
+	std::string repeticion;
 
 public:
 	Ventana();

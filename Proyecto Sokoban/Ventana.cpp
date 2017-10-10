@@ -8,6 +8,7 @@ Ventana::Ventana() :VentanaPrincipal{ VideoMode{ 900,700 },"Sokoban.exe",Style::
 	completo3 = false;
 	completo4 = false;
 	completo5 = false;
+	repeticion = " ";
 
 }
 
@@ -16,7 +17,7 @@ int Ventana::inicializar() {
 
 
 	VentanaPrincipal.setFramerateLimit(10);				//El juego corra a cierta velocidad
-	VentanaPrincipal.setVerticalSyncEnabled(false);		//Pantalla no parpadee cuando se actualice
+	VentanaPrincipal.setVerticalSyncEnabled(true);		//Pantalla no parpadee cuando se actualice
 	VentanaPrincipal.setKeyRepeatEnabled(false);		//Evitar que se realicen muchas acciones al presionar un boton
 
 	if (!Pared.loadFromFile("Wall_Brown.png")) {			//Si no logran cargarse las texturas
@@ -120,7 +121,10 @@ void Ventana::LosEventos() {
 	//Movimiento del Sprite
 	if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up)) {
 		system("cls");
-		cout << "Arriba" << endl;
+
+		std::string rep = " Up";
+		cout << rep << endl;
+		repeticion += rep;
 
 		switch (lista) {			//Switch para saber en cual lista estoy de la 2 a la 7
 
@@ -365,7 +369,10 @@ void Ventana::LosEventos() {
 
 	if (Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::Left)) {
 		system("cls");
-		cout << "Izquierda" << endl;
+
+		std::string rep = " Left";
+		cout << rep << endl;
+		repeticion += rep;
 
 		switch (lista) {
 
@@ -426,7 +433,10 @@ void Ventana::LosEventos() {
 
 	if (Keyboard::isKeyPressed(Keyboard::S) || Keyboard::isKeyPressed(Keyboard::Down)) {
 		system("cls");
-		cout << "Abajo" << endl;						//SUCEDE LO MISMO QUE PARA SUBIR, SOLO QUE AL CONTRARIA
+
+		std::string rep = " Down";
+		cout << rep << endl;
+		repeticion += rep;						//SUCEDE LO MISMO QUE PARA SUBIR, SOLO QUE AL CONTRARIA
 														//PREGUNTO SI LA LISTA DE ABAJO ME PERMITE BAJAR
 
 		switch (lista) {			//Switch para saber en cual lista estoy de la 2 a la 7
@@ -669,7 +679,10 @@ void Ventana::LosEventos() {
 
 	if (Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::Right)) {
 		system("cls");
-		cout << "Derecha" << endl;
+
+		std::string rep = " Right";
+		cout << rep << endl;
+		repeticion += rep;
 
 
 		switch (lista) {			//SABER EN QUE LISTA ESTOY
@@ -772,12 +785,15 @@ void Ventana::LosEventos() {
 }
 
 
-void Ventana::update() {
+void Ventana::update() 
+{
 
-	if (!completo1) {
+	if (!completo1) 
+	{
 		completo1 = ListaGanadora.ganar(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 1 SE COMPLETÓ
 		if (completo1) {											//SI ES ASÍ
-			for (int i = 0; i < 9; i++) {							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
+			for (int i = 0; i < 9; i++)
+			{							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
 
 				L1.Borrar();
 				L2.Borrar();
@@ -788,14 +804,37 @@ void Ventana::update() {
 				L7.Borrar();
 				L8.Borrar();
 			}
-			cout << "Pasando a al nivel 2" << endl;
-			LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
-			return;
+			int opc;
+			cout << "Digite la opci"<<char(162)<<"n que desee realizar?" << endl;
+			cout << "[1]. Avanzar al siguiente nivel" << endl;
+			cout << "[2]. Ver repetici"<<char(162)<< "n" << endl;
+			cin >> opc;
+			while (cin.fail()) // si falla
+			{
+				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
+				Sleep(1500);
+				cin.clear();
+				cin.ignore(500, '\n'); // limpio buffer
+			}
+			
+			if (opc == 1)
+			{
+				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
+				return;
+			}
+			else if (opc == 2)
+			{
+				cout << repeticion;
+				LlenarListas();									
+				return;
+			}
+	
 		}
 	}//NIVEL 1 COMPLETO
 
 	else if (!completo2) {									//SI EL NIVEL 2 NO HA SIDO COMPLETADO
 
+		repeticion = " ";
 		completo2 = ListaGanadora.ganar2(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 2 SE COMPLETÓ
 		if (completo2) {											//SI ES ASÍ
 			for (int i = 0; i < 9; i++) {							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
@@ -809,14 +848,36 @@ void Ventana::update() {
 				L7.Borrar();
 				L8.Borrar();
 			}
-			cout << "Pasando a nivel3" << endl;
-			LlenarListas();									//SE LLENAN LAS LISTAS CON EL NIVEL 1 Y 2 COMPLETOS
-			return;
+			int opc;
+			cout << "Digite la opci" << char(162) << "n que desee realizar?" << endl;
+			cout << "[1]. Avanzar al siguiente nivel" << endl;
+			cout << "[2]. Ver repetici" << char(162) << "n" << endl;
+			cin >> opc;
+			while (cin.fail()) // si falla
+			{
+				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
+				Sleep(1500);
+				cin.clear();
+				cin.ignore(500, '\n'); // limpio buffer
+			}
+
+			if (opc == 1)
+			{
+				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
+				return;
+			}
+			else if (opc == 2)
+			{
+				cout << repeticion;
+				LlenarListas();
+				return;
+			}
 		}
 	}//NIVEL 2 COMPLETO
 
 	else if (!completo3) {
 
+		repeticion = " ";
 		completo3 = ListaGanadora.ganar2(ListaGanadora, ganar1);
 		if (completo3) {
 			for (int i = 0; i < 9; i++) {
@@ -830,13 +891,35 @@ void Ventana::update() {
 				L7.Borrar();
 				L8.Borrar();
 			}
-			cout << "Pasando a nivel 4" << endl;
-			LlenarListas();
-			return;
+			int opc;
+			cout << "Digite la opci" << char(162) << "n que desee realizar?" << endl;
+			cout << "[1]. Avanzar al siguiente nivel" << endl;
+			cout << "[2]. Ver repetici" << char(162) << "n" << endl;
+			cin >> opc;
+			while (cin.fail()) // si falla
+			{
+				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
+				Sleep(1500);
+				cin.clear();
+				cin.ignore(500, '\n'); // limpio buffer
+			}
+
+			if (opc == 1)
+			{
+				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
+				return;
+			}
+			else if (opc == 2)
+			{
+				cout << repeticion;
+				LlenarListas();
+				return;
+			}
 		}
 	}
 	else if (!completo4) {
 
+		repeticion = " ";
 		completo4 = ListaGanadora.ganar(ListaGanadora, ganar1);
 		if (completo4) {
 			for (int i = 0; i < 9; i++) {
@@ -850,9 +933,31 @@ void Ventana::update() {
 				L7.Borrar();
 				L8.Borrar();
 			}
-			cout << "Pasando a Nivel 5" << endl;
-			LlenarListas();
-			return;
+			int opc;
+
+			cout << "Digite la opci" << char(162) << "n que desee realizar?" << endl;
+			cout << "[1]. Avanzar al siguiente nivel" << endl;
+			cout << "[2]. Ver repetici" << char(162) << "n" << endl;
+			cin >> opc;
+			while (cin.fail()) // si falla
+			{
+				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
+				Sleep(1500);
+				cin.clear();
+				cin.ignore(500, '\n'); // limpio buffer
+			}
+
+			if (opc == 1)
+			{
+				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
+				return;
+			}
+			else if (opc == 2)
+			{
+				cout << repeticion;
+				LlenarListas();
+				return;
+			}
 		}
 	}
 	else if (!completo5) {
@@ -1264,7 +1369,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;							// El número "i" del corrido será el último espacio de gane
 
 					}
-					L1.insertar(c);				//SE INSERTA EL NUMERO QUE SE LEE DESDE EL ARCHIVO A LA PRIMERA LISTA
+					L1.insert(c);				//SE INSERTA EL NUMERO QUE SE LEE DESDE EL ARCHIVO A LA PRIMERA LISTA
 				}
 
 				for (int i = 0; i < 9; i++) {				//FOR DE 9 PARA LLENAR 9 NODOS DE LA SEGUNDA LISTA
@@ -1274,7 +1379,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L2.insertar(c);
+					L2.insert(c);
 				}
 
 
@@ -1285,7 +1390,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L3.insertar(c);
+					L3.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1295,7 +1400,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L4.insertar(c);
+					L4.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1305,7 +1410,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L5.insertar(c);
+					L5.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1315,7 +1420,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L6.insertar(c);
+					L6.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1325,7 +1430,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L7.insertar(c);
+					L7.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1335,7 +1440,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L8.insertar(c);
+					L8.insert(c);
 				}
 			}
 			return;
@@ -1360,7 +1465,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L1.insertar(c);
+					L1.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1370,7 +1475,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L2.insertar(c);
+					L2.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1380,7 +1485,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L3.insertar(c);
+					L3.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1390,7 +1495,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L4.insertar(c);
+					L4.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1400,7 +1505,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L5.insertar(c);
+					L5.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1410,7 +1515,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L6.insertar(c);
+					L6.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1420,7 +1525,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L7.insertar(c);
+					L7.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1430,7 +1535,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L8.insertar(c);
+					L8.insert(c);
 				}
 			}
 			return;
@@ -1456,7 +1561,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L1.insertar(c);
+					L1.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1466,7 +1571,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L2.insertar(c);
+					L2.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1476,7 +1581,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L3.insertar(c);
+					L3.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1486,7 +1591,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L4.insertar(c);
+					L4.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1496,7 +1601,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L5.insertar(c);
+					L5.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1506,7 +1611,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L6.insertar(c);
+					L6.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1516,7 +1621,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L7.insertar(c);
+					L7.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1526,7 +1631,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L8.insertar(c);
+					L8.insert(c);
 				}
 			}
 			return;
@@ -1552,7 +1657,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L1.insertar(c);
+					L1.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1562,7 +1667,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L2.insertar(c);
+					L2.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1572,7 +1677,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L3.insertar(c);
+					L3.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1582,7 +1687,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L4.insertar(c);
+					L4.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1592,7 +1697,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L5.insertar(c);
+					L5.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1602,7 +1707,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L6.insertar(c);
+					L6.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1612,7 +1717,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L7.insertar(c);
+					L7.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1622,7 +1727,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L8.insertar(c);
+					L8.insert(c);
 				}
 			}
 			return;
@@ -1648,7 +1753,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L1.insertar(c);
+					L1.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1658,7 +1763,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L2.insertar(c);
+					L2.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1668,7 +1773,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L3.insertar(c);
+					L3.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1678,7 +1783,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L4.insertar(c);
+					L4.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1688,7 +1793,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L5.insertar(c);
+					L5.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1698,7 +1803,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L6.insertar(c);
+					L6.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1708,7 +1813,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L7.insertar(c);
+					L7.insert(c);
 				}
 
 				for (int i = 0; i < 9; i++) {
@@ -1718,7 +1823,7 @@ void Ventana::LlenarListas() {
 						ganar1 = i + 1;
 
 					}
-					L8.insertar(c);
+					L8.insert(c);
 				}
 			}
 			return;
@@ -1795,12 +1900,16 @@ void Ventana::iniciarMenu() {
 					case 1:
 						int opc;
 						system("cls");
-						cout << "Digite la opcion para cargar el nivel?" << endl << endl;
-						cout << "[1] Nivel 1" << endl;
-						cout << "[2] Nivel 2" << endl;
-						cout << "[3] Nivel 3" << endl;
-						cout << "[4] Nivel 4" << endl;
-						cout << "[5] Nivel 5" << endl;
+						cout << " ______________________________" << endl; 
+						cout << "| ***Menu para cargar mapas*** |" << endl;
+						cout << "| Digite la opcion:            |" << endl;
+					    cout << "|______________________________|" << endl;
+						cout << "| [1] Nivel 1                  |" << endl;
+						cout << "| [2] Nivel 2                  |" << endl;
+						cout << "| [3] Nivel 3                  |" << endl;
+						cout << "| [4] Nivel 4                  |" << endl;
+						cout << "| [5] Nivel 5                  |" << endl;
+						cout << "|______________________________|" << endl;
 
 						opc = validarEntrada();
 						if (opc < 1 || opc>5) {
