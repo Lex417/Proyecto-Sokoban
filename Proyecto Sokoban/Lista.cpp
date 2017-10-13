@@ -209,12 +209,14 @@ bool Lista::ganar(Lista L, int numero)
 		if (i == numero) 
 		{
 			if (temp->objectID == 2 && temp->prev->objectID == 2 && temp->prev->prev->objectID == 2  )
-			{														//SI EL PUNTO DE GANAR TIENE UN 2(CAJA) Y EL ANTERIOR TAMBIEN, Y EL ANTERIOR DEL ANTERIOR TAMBIEN ES UN 2
+			{															//SI EL PUNTO DE GANAR TIENE UN 2(CAJA) Y EL ANTERIOR TAMBIEN, Y EL ANTERIOR DEL ANTERIOR TAMBIEN ES UN 2
+				system("cls");
 				cout << " Felicidades !! Has completado el nivel!" << endl;	
 				return true;							//EL NIVEL PASA A ESTAR COMPLETO
 			}
 			else if (temp->objectID == 2 && temp->prev->prev->objectID == 2)
 			{
+				system("cls");
 				cout << " Felicidades !! Has completado el nivel!" << endl;
 				return true;
 			}
@@ -241,6 +243,7 @@ bool Lista::ganar2(Lista L, int numero)
 		{
 			if (temp->objectID == 2 && temp->prev->objectID == 2 && temp->prev->prev->prev->prev->prev->prev->objectID == 2)
 			{
+				system("cls");
 				cout << " Felicidades !! Has completado el nivel!" << endl;
 				return true;
 			}											//EL NIVEL PASA A ESTAR COMPLETO

@@ -8,13 +8,76 @@ Ventana::Ventana() :VentanaPrincipal{ VideoMode{ 900,700 },"Sokoban.exe",Style::
 	completo3 = false;
 	completo4 = false;
 	completo5 = false;
-	repeticion = " ";
+	
 
 }
+void Ventana::deleteReplay()
+{
+	int i = 0;
+	while (i < static_cast<int>(repeticion.size()))
+	{
+		repeticion[i].pop_back();
+		i++;
+
+	}
+	repeticion.resize(0);
+}
+void Ventana::replay()
+{
+	int i = 0;
+	while( i < static_cast<int>(repeticion.size()))
+	{
+		
+		cout << repeticion[i];
+		Sleep(500);
+		i++;
+		
+	}
+}
+void Ventana::paintLevel(int x, Lista list, int num){
+
+	/*	0 is an empty space
+		1 is the player
+		2 is the box
+		3 is the wall
+		4 is the winnig point	*/
+
+	for (int i = 0; i < 9; i++) {
+		
+		int pos = -1;
+
+		pos = list.getTipo(i);// will have the list numbers
+
+		switch (pos) {
+
+		case 0:	break;
+		case 1:													
+			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
+			VentanaPrincipal.draw(ElJugador);
+			lista = num;
+			nodo = i;
+			break;
+		case 2:														
+			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
+			VentanaPrincipal.draw(LaCaja);
+			break;
+		case 3:														
+			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
+			VentanaPrincipal.draw(LaPared);
+			break;
+		case 4:
+			Ganar.setPosition(Vector2f(i*63.f, x*63.f));			
+			VentanaPrincipal.draw(Ganar);
+			break;
+		default:{}
+		}
+	}
+}//end of paint level
 
 
-int Ventana::inicializar() {
+int Ventana::initializeWindow() {
 
+	//TexturesSprites ts;
 
 	VentanaPrincipal.setFramerateLimit(10);				//El juego corra a cierta velocidad
 	VentanaPrincipal.setVerticalSyncEnabled(true);		//Pantalla no parpadee cuando se actualice
@@ -105,6 +168,9 @@ int Ventana::inicializar() {
 	Level.setColor(Color(178,34 ,34));
 	Level.setPosition(Vector2f(580.f, 40.f));
 
+	//ts.loadTexture();
+	//ts.loadFont();
+
 	LlenarListas();
 }
 
@@ -112,19 +178,19 @@ int Ventana::inicializar() {
 void Ventana::LosEventos() {
 
 	while (VentanaPrincipal.pollEvent(eventos)) {
-
-		if (eventos.type == Event::Closed) { //Si el evento que recibo es cerrar
-			VentanaPrincipal.close();			//Cierro la ventana
+		// close the game
+		if (eventos.type == Event::Closed) {
+			VentanaPrincipal.close();		
 		}
 	}
 
-	//Movimiento del Sprite
+	// Sprite's movements
 	if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up)) {
 		system("cls");
 
 		std::string rep = " Up";
 		cout << rep << endl;
-		repeticion += rep;
+		repeticion.push_back(rep);
 
 		switch (lista) {			//Switch para saber en cual lista estoy de la 2 a la 7
 
@@ -372,7 +438,7 @@ void Ventana::LosEventos() {
 
 		std::string rep = " Left";
 		cout << rep << endl;
-		repeticion += rep;
+		repeticion.push_back(rep);
 
 		switch (lista) {
 
@@ -436,7 +502,8 @@ void Ventana::LosEventos() {
 
 		std::string rep = " Down";
 		cout << rep << endl;
-		repeticion += rep;						//SUCEDE LO MISMO QUE PARA SUBIR, SOLO QUE AL CONTRARIA
+		repeticion.push_back(rep);						
+		//SUCEDE LO MISMO QUE PARA SUBIR, SOLO QUE AL CONTRARIA
 														//PREGUNTO SI LA LISTA DE ABAJO ME PERMITE BAJAR
 
 		switch (lista) {			//Switch para saber en cual lista estoy de la 2 a la 7
@@ -682,7 +749,7 @@ void Ventana::LosEventos() {
 
 		std::string rep = " Right";
 		cout << rep << endl;
-		repeticion += rep;
+		repeticion.push_back(rep);
 
 
 		switch (lista) {			//SABER EN QUE LISTA ESTOY
@@ -741,6 +808,7 @@ void Ventana::LosEventos() {
 
 	 //PRESIONAR PARA REINICIAR
 	if (Keyboard::isKeyPressed(Keyboard::LShift)){
+		deleteReplay();
 		for (int i = 0; i < 9; i++) {			//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
 
 			L1.Borrar();
@@ -758,6 +826,7 @@ void Ventana::LosEventos() {
 	}
 
 	if (Keyboard::isKeyPressed(Keyboard::BackSpace)){ //SE RETORNA AL MENU PRINCIPAL BORRANDO TODAS LAS LISTAS
+		deleteReplay();
 		for (int i = 0; i < 9; i++) {
 
 			L1.Borrar();
@@ -824,7 +893,7 @@ void Ventana::update()
 			}
 			else if (opc == 2)
 			{
-				cout << repeticion;
+				replay();
 				LlenarListas();									
 				return;
 			}
@@ -834,7 +903,7 @@ void Ventana::update()
 
 	else if (!completo2) {									//SI EL NIVEL 2 NO HA SIDO COMPLETADO
 
-		repeticion = " ";
+		
 		completo2 = ListaGanadora.ganar2(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 2 SE COMPLETÓ
 		if (completo2) {											//SI ES ASÍ
 			for (int i = 0; i < 9; i++) {							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
@@ -868,7 +937,7 @@ void Ventana::update()
 			}
 			else if (opc == 2)
 			{
-				cout << repeticion;
+				replay();
 				LlenarListas();
 				return;
 			}
@@ -877,7 +946,7 @@ void Ventana::update()
 
 	else if (!completo3) {
 
-		repeticion = " ";
+		
 		completo3 = ListaGanadora.ganar2(ListaGanadora, ganar1);
 		if (completo3) {
 			for (int i = 0; i < 9; i++) {
@@ -911,7 +980,7 @@ void Ventana::update()
 			}
 			else if (opc == 2)
 			{
-				cout << repeticion;
+				replay();
 				LlenarListas();
 				return;
 			}
@@ -919,7 +988,7 @@ void Ventana::update()
 	}
 	else if (!completo4) {
 
-		repeticion = " ";
+		
 		completo4 = ListaGanadora.ganar(ListaGanadora, ganar1);
 		if (completo4) {
 			for (int i = 0; i < 9; i++) {
@@ -954,7 +1023,7 @@ void Ventana::update()
 			}
 			else if (opc == 2)
 			{
-				cout << repeticion;
+				replay();
 				LlenarListas();
 				return;
 			}
@@ -995,353 +1064,53 @@ void Ventana::update()
 void Ventana::render() {
 
 	VentanaPrincipal.clear(Color(250, 235, 215));
-	//ventana un for para recorrer la lista y 
-	//for donde voy recorriendo la lista
-
+	
 	PokemonRed.setPosition(600.f, 125.f);
+
 	VentanaPrincipal.draw(PokemonRed);
 
+	int x = 0;// use as a coordinate to paint each frame
 
-	int x = 0;						//VARIABLE GLOBAL PARA EL METODO QUE SETTEARÁ LA POSICION "Y" DEL OBJETO
-
-	for (int i = 0; i < 9; i++) {
-
-		//Obtener los numeros de la primera lista
-		int pos = L1.getTipo(i);
-
-		switch (pos) {						//SE DISTRIBUIRÁ SEGUN EL NUMERO QUE TENGA
-
-		case 0:								//SI ES UN 0 NO SE HARÁ NADA PUES ES UN ESPACIO LIBRE
-
-			break;
-
-		case 1:														// SI ES UN 1 SE PINTARÁ AL JUGADOR
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 1;
-			nodo = i;
-			break;
-
-		case 2:														// SI ES UN 2 SE PINTARÁ LA CAJA					
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:														// SI ES UN 3 SE PINTARÁ EL MURO
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));			// SI ES UN 4 SE PINTARÁ EL PUNTO DE GANAR
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
-
-	x = x + 1;		//LA VARIABLE X AUMENTARÁ UNO PARA LAS IMAGENES NO CAIGAN ENCIMA DE LAS ANTERIORES
-
-	for (int i = 0; i < 9; i++) {									//SE REALIZA LO MISMO PARA TODAS LAS LISTAS
-
-																	//Obtener los numeros de la segunda lista
-		int pos = L2.getTipo(i);
-
-		switch (pos) {
-
-		case 0:
-
-			break;
-
-		case 1:
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 2;
-			nodo = i;
-			break;
-
-		case 2:
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
-
-
+	paintLevel(x, L1, 1); // paints the first row
 	x = x++;
 
-	for (int i = 0; i < 9; i++) {
-
-		//Obtener los numeros de la tercera lista
-		int pos = L3.getTipo(i);
-
-		switch (pos) {
-
-		case 0:
-
-			break;
-
-		case 1:
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 3;
-			nodo = i;
-			break;
-
-		case 2:
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
-
+	paintLevel(x, L2, 2); // paints the sencond row
 	x = x++;
 
-	for (int i = 0; i < 9; i++) {
-
-		//Obtener los numeros de la cuarta lista
-		int pos = L4.getTipo(i);
-
-		switch (pos) {
-
-		case 0:
-
-			break;
-
-		case 1:
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 4;
-			nodo = i;
-			break;
-
-
-		case 2:
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
-
+	paintLevel(x, L3, 3); // paints the third row
 	x = x++;
 
-	for (int i = 0; i < 9; i++) {
-
-		//Obtener los numeros de la quinta lista
-		int pos = L5.getTipo(i);
-
-		switch (pos) {
-
-		case 0:
-
-			break;
-
-		case 1:
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 5;
-			nodo = i;
-			break;
-
-		case 2:
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
-
+	paintLevel(x, L4, 4); // paints the fourth row
 	x = x++;
 
-	for (int i = 0; i < 9; i++) {
-
-		//Obtener los numeros de la sexta lista
-		int pos = L6.getTipo(i);
-
-		switch (pos) {
-
-		case 0:
-
-			break;
-
-		case 1:
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 6;
-			nodo = i;
-			break;
-
-		case 2:
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
-
+	paintLevel(x, L5, 5); // paints the fifth row
 	x = x++;
 
-	for (int i = 0; i < 9; i++) {
-
-		//Obtener los numeros de la setima lista
-		int pos = L7.getTipo(i);
-
-		switch (pos) {
-
-		case 0:
-
-			break;
-
-		case 1:
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 7;
-			nodo = i;
-			break;
-
-		case 2:
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
-
-
+	paintLevel(x, L6, 6); // paints the sixth row
 	x = x++;
 
-	for (int i = 0; i < 9; i++) {
+	paintLevel(x, L7, 7); // paints the seventh row
+	x = x++;
 
-		//Obtener los numeros de la octava lista
-		int pos = L8.getTipo(i);
-
-		switch (pos) {
-
-		case 0:
-
-			break;
-
-		case 1:
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
-			lista = 8;
-			nodo = i;
-			break;
-
-		case 2:
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
-			break;
-
-		case 3:
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
-			break;
-
-		case 4:
-
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(Ganar);
-			break;
-
-		default: {}
-		}
-	}
+	paintLevel(x, L8, 8); // paints the eighth row
 
 	for (int i = 0; i < 4; i++) {
-		VentanaPrincipal.draw(opciones[i]);			//SE DIBUJAN LAS OPCIONES DE REINICAR, VOLVER AL MENU Y SALIR
+		VentanaPrincipal.draw(opciones[i]);	// prints game's options
 	}
-	VentanaPrincipal.draw(Level);					//SE DIBUJA EL NUMERO DEL NIVEL
+	
+	VentanaPrincipal.draw(Level);// prints the level's number
 
 	VentanaPrincipal.display();
-
-
-
-}
+}// end of render
 
 void Ventana::run() {
 
-	inicializar();
+	initializeWindow();
 
-	while (VentanaPrincipal.isOpen())
-	{
-
+	while (VentanaPrincipal.isOpen()){
 		LosEventos();
 		update();
 		render();
-
 	}
 	cleared();
 }

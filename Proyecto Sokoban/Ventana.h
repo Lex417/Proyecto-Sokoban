@@ -1,19 +1,25 @@
-#include <cstdlib>
-#include <iostream>
 #include <SFML/Graphics.hpp>
+//--------------------------
 #include "Lista.h"
 #include "Menu.h"
+
+//--------------------------
 #include <sstream>
 #include <fstream>
 #include <Windows.h>
-
+#include <cstdlib>
+#include <iostream>
+#include <vector>
+//--------------------------
 using namespace sf;
 using std::cout;
 using std::endl;
 using std::cin;
 using std::ifstream;
 using std::ios;
-
+using std::string;
+using std::vector;
+//--------------------------
 class Ventana {
 private:
 
@@ -53,11 +59,15 @@ private:
 
 	int lista, nodo, temporal, ganar1;
 	bool completo1, completo2, completo3, completo4, completo5;
-	std::string repeticion;
+	vector <string> repeticion;
 
 public:
+
 	Ventana();
-	int inicializar();
+
+	void paintLevel(int,Lista,int);
+	int initializeWindow();
+
 	void LosEventos();
 	void update();
 	void render();
@@ -71,5 +81,7 @@ public:
 	void LlenarListas();
 	int validarEntrada();
 	void iniciarMenu();
+	void replay();
+	void deleteReplay();
 
 };
