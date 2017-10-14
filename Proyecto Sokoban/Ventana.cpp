@@ -8,32 +8,10 @@ Ventana::Ventana() :VentanaPrincipal{ VideoMode{ 900,700 },"Sokoban.exe",Style::
 	completo3 = false;
 	completo4 = false;
 	completo5 = false;
-	
+	repetition = " ";
 
 }
-void Ventana::deleteReplay()
-{
-	int i = 0;
-	while (i < static_cast<int>(repeticion.size()))
-	{
-		repeticion[i].pop_back();
-		i++;
 
-	}
-	repeticion.resize(0);
-}
-void Ventana::replay()
-{
-	int i = 0;
-	while( i < static_cast<int>(repeticion.size()))
-	{
-		
-		cout << repeticion[i];
-		Sleep(500);
-		i++;
-		
-	}
-}
 void Ventana::paintLevel(int x, Lista list, int num){
 
 	/*	0 is an empty space
@@ -52,92 +30,79 @@ void Ventana::paintLevel(int x, Lista list, int num){
 
 		case 0:	break;
 		case 1:													
-			ElJugador.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(ElJugador);
+			playerSprite.setPosition(Vector2f(i*63.f, x*63.f));
+			VentanaPrincipal.draw(playerSprite);
 			lista = num;
 			nodo = i;
 			break;
 		case 2:														
-			LaCaja.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaCaja);
+			boxesSprite.setPosition(Vector2f(i*63.f, x*63.f));
+			VentanaPrincipal.draw(boxesSprite);
 			break;
 		case 3:														
-			LaPared.setPosition(Vector2f(i*63.f, x*63.f));
-			VentanaPrincipal.draw(LaPared);
+			wallsSprite.setPosition(Vector2f(i*63.f, x*63.f));
+			VentanaPrincipal.draw(wallsSprite);
 			break;
 		case 4:
-			Ganar.setPosition(Vector2f(i*63.f, x*63.f));			
-			VentanaPrincipal.draw(Ganar);
+			winnigSprite.setPosition(Vector2f(i*63.f, x*63.f));
+			VentanaPrincipal.draw(winnigSprite);
 			break;
 		default:{}
 		}
 	}
 }//end of paint level
 
-
 int Ventana::initializeWindow() {
-
-	//TexturesSprites ts;
-
-	VentanaPrincipal.setFramerateLimit(10);				//El juego corra a cierta velocidad
+	VentanaPrincipal.setFramerateLimit(10);				//Game speed
 	VentanaPrincipal.setVerticalSyncEnabled(true);		//Pantalla no parpadee cuando se actualice
 	VentanaPrincipal.setKeyRepeatEnabled(false);		//Evitar que se realicen muchas acciones al presionar un boton
 
-	if (!Pared.loadFromFile("Wall_Brown.png")) {			//Si no logran cargarse las texturas
+	if (!wall.loadFromFile("Wall_Brown.png")){
 		cout << "No se ha encontrado la imagen&pause";
 		return -1;
 	}
-	LaPared.setTexture(Pared);
-
-	if (!EspacioLibre.loadFromFile("GroundGravel_Concrete.png")) {
+	wallsSprite.setTexture(wall);
+	if (!emptySpace.loadFromFile("GroundGravel_Concrete.png")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-	Disponible.setTexture(EspacioLibre);
-
-	if (!Caja.loadFromFile("Crate_Red.png")) {
+	emptySprite.setTexture(emptySpace);
+	if (!box.loadFromFile("Crate_Red.png")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-	LaCaja.setTexture(Caja);
-
-	if (!Jugador.loadFromFile("Character4.png")) {
+	boxesSprite.setTexture(box);
+	if (!playerDown.loadFromFile("Character4.png")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-	ElJugador.setTexture(Jugador);
-
-	if (!JugadorArriba.loadFromFile("CharacterArriba.png")) {
+	playerSprite.setTexture(playerDown);
+	if (!playerUp.loadFromFile("CharacterArriba.png")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-
-	if (!JugadorDer.loadFromFile("CharacterDer.png")) {
+	if (!playerRight.loadFromFile("CharacterDer.png")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-
-	if (!JugadorIzq.loadFromFile("CharacterIzq.png")) {
+	if (!playerLeft.loadFromFile("CharacterIzq.png")) {
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-
-
-	if (!PuntoGanar.loadFromFile("EndPoint_Red.png")) {
+	if (!winnigPoints.loadFromFile("EndPoint_Red.png")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-	Ganar.setTexture(PuntoGanar);
-
-	if (!font.loadFromFile("SuperRetro54.ttf")) {
+	winnigSprite.setTexture(winnigPoints);
+	if (!font.loadFromFile("SuperRetro54.ttf")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-	if (!Red.loadFromFile("Red_skin.png")) {
+	if (!red.loadFromFile("Red_skin.png")){
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
-	PokemonRed.setTexture(Red);
+	pokemonRed.setTexture(red);
 
 	opciones[0].setFont(font);
 	opciones[0].setCharacterSize(20);
@@ -168,649 +133,540 @@ int Ventana::initializeWindow() {
 	Level.setColor(Color(178,34 ,34));
 	Level.setPosition(Vector2f(580.f, 40.f));
 
-	//ts.loadTexture();
-	//ts.loadFont();
-
 	LlenarListas();
-}
+}// End of initializeWindow
+
+void Ventana::nextLevel(bool done)
+{
+	if (done) {// check if level 1 is completed										
+		for (int i = 0; i < 9; i++) {
+			L1.Borrar();
+			L2.Borrar();
+			L3.Borrar();
+			L4.Borrar();
+			L5.Borrar();
+			L6.Borrar();
+			L7.Borrar();
+			L8.Borrar();
+		}
+		int opc;
+		cout << "Digite la opci" << char(162) << "n que desee realizar?" << endl;
+		cout << "[1]. Avanzar al siguiente nivel" << endl;
+		cout << "[2]. Ver repetici" << char(162) << "n" << endl;
+		cin >> opc;
+		while (cin.fail()) {
+			cout << "\rPor favor digite una opcion valida";
+			Sleep(1500);
+			cin.clear();
+			cin.ignore(500, '\n');
+		}
+		switch (opc) {
+		case 1:
+			LlenarListas();
+			return;
+		case 2:
+			cout << repetition;
+			LlenarListas();
+			return;
+		default:{}
+
+		}
+		
+	}
+}// End of nextLevel
 
 
-void Ventana::LosEventos() {
+/*-------------------------------------------------
+		 0 is an empty space
+		 1 is the player
+		 2 is the box
+		 3 is the wall
+		 4 is the winnig point
+		 lista-- up
+		 lista++ down
+		 nodo-- left
+		 nodo++ right
+		 list 1 and 8 are all walls
+-------------------------------------------------*/
+
+void Ventana::movements() {
 
 	while (VentanaPrincipal.pollEvent(eventos)) {
-		// close the game
 		if (eventos.type == Event::Closed) {
-			VentanaPrincipal.close();		
+			VentanaPrincipal.close();// closes the game	
 		}
 	}
-
-	// Sprite's movements
-	if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up)) {
+	if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up)) { // Sprite's movements
 		system("cls");
-
-		std::string rep = " Up";
+		string rep = " Up";
 		cout << rep << endl;
-		repeticion.push_back(rep);
-
-		switch (lista) {			//Switch para saber en cual lista estoy de la 2 a la 7
-
-
-		case 2:	//estoy en lista 2
-			system("cls");
-			cout << "Arriba hay un muro, no se puede mover" << endl;
-			ElJugador.setTexture(JugadorArriba);
-			break;
-
-
-
-		case 3:		//Case estoy en lista 3
-
-			switch (L2.getTipo(nodo)) {			//Saber que numero hay en la lista 2
-
-			case 0:								// si es un 0 (Espacio Libre)
-
-				temporal = L2.getTipo(nodo);				//Se guarda el numero que tenga la lista 2
-				L2.CambiarEstado(nodo, L3.getTipo(nodo));	//La lista 2 pasa a tener el numero que tenga la lista 3
-				L3.CambiarEstado(nodo, temporal);			//La Lista 3 pasa a tener el numero que se habia guardado de la lista 2
-				lista--;									//El jugador pasa a estar en la lista de arriba
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-			case 2:													//Si es un 2 (Una caja)
-				if (L1.Movimiento(nodo)) {							//Pregunto si me puedo mover  retorna true si sí se puede o false si no
-					L1.CambiarEstado(nodo, L2.getTipo(nodo));		//La Lista 1 pasa a tener el numero que tiene la Lista 2
-					L2.CambiarEstado(nodo, L3.getTipo(nodo));		//La Lista 2 pasa a tener el numero que tiene la Lista 3
-					L3.CambiarEstado(nodo, 0);						//La Lista 1 pasa a tener un espacio libre 
-					lista--;										//El Jugador pasa a estar a la lista de arriba
-					ElJugador.setTexture(JugadorArriba);
-				}
-				break;
-
-			case 3:													//Si es un 3 (Un Muro)
+		repetition += rep;
+	//----------------------- principle switch----------------------------------
+		switch (lista) {
+			case 2:// list 2
 				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;		//No se puede mover
-				ElJugador.setTexture(JugadorArriba);
-				break;
+				cout << "Arriba hay un muro, no se puede mover" << endl;
+				playerSprite.setTexture(playerUp);
+				break;// list 2
 
-			case 4:												//Si es un 4, punto de llegada
-
-
-				L2.CambiarEstado(nodo, L3.getTipo(nodo));		//La lista de arriba se actualiza al numero que tengo la lista
-				L3.CambiarEstado(nodo, 0);						//La lista se actualiza a un espacio vacio
-				lista--;										//El Jugador pasa a estar en la lista de arriba
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE ARRIBA
-
-			break; //break del case 3 de la lista en la que estoy
-				   //OCURRE LO MISMO PARA CUALQUIER LISTA EN LA QUE ESTE
-
-		case 4: //Estoy en lista 4
-
-			switch (L3.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L3.getTipo(nodo);
-				L3.CambiarEstado(nodo, L4.getTipo(nodo));
-				L4.CambiarEstado(nodo, temporal);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-			case 2:
-				if (L2.Movimiento(nodo)) {
-					L2.CambiarEstado(nodo, L3.getTipo(nodo));
-					L3.CambiarEstado(nodo, L4.getTipo(nodo));
-					L4.CambiarEstado(nodo, 0);
-					lista--;
-					ElJugador.setTexture(JugadorArriba);
+			case 3:// list 3
+	//----------------------- sub switch list 3----------------------------------
+				switch (L2.getTipo(nodo)) {	
+					case 0:								
+						temporal = L2.getTipo(nodo);				//Se guarda el numero que tenga la lista 2
+						L2.CambiarEstado(nodo, L3.getTipo(nodo));	//La lista 2 pasa a tener el numero que tenga la lista 3
+						L3.CambiarEstado(nodo, temporal);			//La Lista 3 pasa a tener el numero que se habia guardado de la lista 2
+						lista--;									
+						playerSprite.setTexture(playerUp);
+						break;
+					case 2:													
+						if (L1.Movimiento(nodo)) {						
+							L1.CambiarEstado(nodo, L2.getTipo(nodo));		//La Lista 1 pasa a tener el numero que tiene la Lista 2
+							L2.CambiarEstado(nodo, L3.getTipo(nodo));		//La Lista 2 pasa a tener el numero que tiene la Lista 3
+							L3.CambiarEstado(nodo, 0);						//La Lista 1 pasa a tener un espacio libre 
+							lista--;										
+							playerSprite.setTexture(playerUp);
+						}
+						break;
+					case 3:													
+						system("cls");
+						cout << "No se puede subir xq hay un muro" << endl;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 4:												
+						L2.CambiarEstado(nodo, L3.getTipo(nodo));		//La lista de arriba se actualiza al numero que tengo la lista
+						L3.CambiarEstado(nodo, 0);						//La lista se actualiza a un espacio vacio
+						lista--;										
+						playerSprite.setTexture(playerUp);
+						break;
 				}
-				break;
+	//-----------------------end of sub switch list 3--------------------------------
+				break;// list 3
 
-			case 3:
-				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-			case 4:
-
-
-				L3.CambiarEstado(nodo, L4.getTipo(nodo));
-				L4.CambiarEstado(nodo, 0);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE ARRIBA
-
-			break;//Break Lista 4
-
-
-		case 5://estoy en lista 5
-
-
-			switch (L4.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L4.getTipo(nodo);
-				L4.CambiarEstado(nodo, L5.getTipo(nodo));
-				L5.CambiarEstado(nodo, temporal);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-			case 2:
-				if (L3.Movimiento(nodo)) {
-					L3.CambiarEstado(nodo, L4.getTipo(nodo));
-					L4.CambiarEstado(nodo, L5.getTipo(nodo));
-					L5.CambiarEstado(nodo, 0);
-					lista--;
-					ElJugador.setTexture(JugadorArriba);
+			case 4: // list 4
+	//-----------------------sub switch list 4--------------------------------------
+				switch (L3.getTipo(nodo)) {
+					case 0:
+						temporal = L3.getTipo(nodo);
+						L3.CambiarEstado(nodo, L4.getTipo(nodo));
+						L4.CambiarEstado(nodo, temporal);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 2:
+						if (L2.Movimiento(nodo)) {
+							L2.CambiarEstado(nodo, L3.getTipo(nodo));
+							L3.CambiarEstado(nodo, L4.getTipo(nodo));
+							L4.CambiarEstado(nodo, 0);
+							lista--;
+							playerSprite.setTexture(playerUp);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede subir xq hay un muro" << endl;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 4:
+						L3.CambiarEstado(nodo, L4.getTipo(nodo));
+						L4.CambiarEstado(nodo, 0);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
 				}
-				break;
+	//-----------------------end of sub switch list 4-------------------------------
+				break;// list 4
 
-			case 3:
-				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-			case 4:
-
-
-				L4.CambiarEstado(nodo, L5.getTipo(nodo));
-				L5.CambiarEstado(nodo, 0);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE ARRIBA
-			break;//Break Lista 5
-
-
-
-		case 6: //Estoy en lista 6
-
-			switch (L5.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L5.getTipo(nodo);
-				L5.CambiarEstado(nodo, L6.getTipo(nodo));
-				L6.CambiarEstado(nodo, temporal);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-
-			case 2:
-				if (L4.Movimiento(nodo)) {
-					L4.CambiarEstado(nodo, L5.getTipo(nodo));
-					L5.CambiarEstado(nodo, L6.getTipo(nodo));
-					L6.CambiarEstado(nodo, 0);
-					lista--;
-					ElJugador.setTexture(JugadorArriba);
+			case 5:// list 5
+	//-----------------------sub switch list 5--------------------------------------
+				switch (L4.getTipo(nodo)) {
+					case 0:
+						temporal = L4.getTipo(nodo);
+						L4.CambiarEstado(nodo, L5.getTipo(nodo));
+						L5.CambiarEstado(nodo, temporal);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 2:
+						if (L3.Movimiento(nodo)) {
+							L3.CambiarEstado(nodo, L4.getTipo(nodo));
+							L4.CambiarEstado(nodo, L5.getTipo(nodo));
+							L5.CambiarEstado(nodo, 0);
+							lista--;
+							playerSprite.setTexture(playerUp);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede subir porque hay un muro" << endl;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 4:
+						L4.CambiarEstado(nodo, L5.getTipo(nodo));
+						L5.CambiarEstado(nodo, 0);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
 				}
-				break;
+	//-----------------------end of sub switch list 5-------------------------------
+				break;// list 5
 
-			case 3:
-				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-			case 4:
-
-
-				L5.CambiarEstado(nodo, L6.getTipo(nodo));
-				L6.CambiarEstado(nodo, 0);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE ARRIBA
-
-			break;//Break lista 6
-
-		case 7: //estoy en lista 7
-
-			switch (L6.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L6.getTipo(nodo);
-				L6.CambiarEstado(nodo, L7.getTipo(nodo));
-				L7.CambiarEstado(nodo, temporal);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-			case 2:
-				if (L5.Movimiento(nodo)) {
-					L5.CambiarEstado(nodo, L6.getTipo(nodo));
-					L6.CambiarEstado(nodo, L7.getTipo(nodo));
-					L7.CambiarEstado(nodo, 0);
-					lista--;
-					ElJugador.setTexture(JugadorArriba);
+			case 6: // list 6
+	//-----------------------sub switch list 6--------------------------------------
+				switch (L5.getTipo(nodo)) {
+					case 0:
+						temporal = L5.getTipo(nodo);
+						L5.CambiarEstado(nodo, L6.getTipo(nodo));
+						L6.CambiarEstado(nodo, temporal);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 2:
+						if (L4.Movimiento(nodo)) {
+							L4.CambiarEstado(nodo, L5.getTipo(nodo));
+							L5.CambiarEstado(nodo, L6.getTipo(nodo));
+							L6.CambiarEstado(nodo, 0);
+							lista--;
+							playerSprite.setTexture(playerUp);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede subir porque hay un muro" << endl;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 4:
+						L5.CambiarEstado(nodo, L6.getTipo(nodo));
+						L6.CambiarEstado(nodo, 0);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
 				}
-				break;
+	//-----------------------end of sub switch list 6-------------------------------
+				break;// list 6
 
-			case 3:
-				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-			case 4:
-
-
-				L6.CambiarEstado(nodo, L7.getTipo(nodo));
-				L7.CambiarEstado(nodo, 0);
-				lista--;
-				ElJugador.setTexture(JugadorArriba);
-				break;
-
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE ARRIBA
-			break; //Lista 7
-
-		}//fin Switch LISTA EN LA QUE ESTOY
-
-	}// Fin de presionar arriba
-
+			case 7: // list 7
+	//-----------------------sub switch list 7--------------------------------------
+				switch (L6.getTipo(nodo)) {
+					case 0:
+						temporal = L6.getTipo(nodo);
+						L6.CambiarEstado(nodo, L7.getTipo(nodo));
+						L7.CambiarEstado(nodo, temporal);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 2:
+						if (L5.Movimiento(nodo)) {
+							L5.CambiarEstado(nodo, L6.getTipo(nodo));
+							L6.CambiarEstado(nodo, L7.getTipo(nodo));
+							L7.CambiarEstado(nodo, 0);
+							lista--;
+							playerSprite.setTexture(playerUp);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede subir porque hay un muro" << endl;
+						playerSprite.setTexture(playerUp);
+						break;
+					case 4:
+						L6.CambiarEstado(nodo, L7.getTipo(nodo));
+						L7.CambiarEstado(nodo, 0);
+						lista--;
+						playerSprite.setTexture(playerUp);
+						break;
+				}
+	//----------------------- end of sub switch list 7-------------------------------
+				break;// list 7
+		}
+	//----------------------- end of principle switch--------------------------------
+	}// End of up keyboard up
 
 	if (Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::Left)) {
 		system("cls");
-
-		std::string rep = " Left";
+		string rep = " Left";
 		cout << rep << endl;
-		repeticion.push_back(rep);
+		repetition += rep;
 
 		switch (lista) {
-
-		case 2:
-			ElJugador.setTexture(JugadorIzq);
-			if (L2.MovimientoIzquierda(nodo)) {			//PREGUNTO A LA LISTA SI ME PUEDO MOVER, RETORNA TRUE SI SÍ o FALSE SI NO
-				nodo--;									//ME MUEVO UNA POSICION A LA IZQUIERDA
-
-			}
-			break;
-
-		case 3:
-			ElJugador.setTexture(JugadorIzq);
-			if (L3.MovimientoIzquierda(nodo)) {
-				nodo--;
-
-			}
-			break;
-
-		case 4:
-			ElJugador.setTexture(JugadorIzq);
-			if (L4.MovimientoIzquierda(nodo)) {
-				nodo--;
-			}
-			break;
-
-		case 5:
-			ElJugador.setTexture(JugadorIzq);
-			if (L5.MovimientoIzquierda(nodo)) {
-				nodo--;
-
-			}
-			break;
-
-		case 6:
-			ElJugador.setTexture(JugadorIzq);
-			if (L6.MovimientoIzquierda(nodo)) {
-				nodo--;
-
-			}
-
-			break;
-
-		case 7:
-			ElJugador.setTexture(JugadorIzq);
-			if (L7.MovimientoIzquierda(nodo)) {
-				nodo--;
-				ElJugador.setTexture(JugadorIzq);
-			}
-			break;
-
-		default: {}
-		}//fin switch
-
-
-	}//Presionar Izquierda
+			case 2:
+				playerSprite.setTexture(playerLeft);
+				if (L2.MovimientoIzquierda(nodo)) {
+					nodo--;									
+				}
+				break;
+			case 3:
+				playerSprite.setTexture(playerLeft);
+				if (L3.MovimientoIzquierda(nodo)) {
+					nodo--;
+				}
+				break;
+			case 4:
+				playerSprite.setTexture(playerLeft);
+				if (L4.MovimientoIzquierda(nodo)) {
+					nodo--;
+				}
+				break;
+			case 5:
+				playerSprite.setTexture(playerLeft);
+				if (L5.MovimientoIzquierda(nodo)) {
+					nodo--;
+				}
+				break;
+			case 6:
+				playerSprite.setTexture(playerLeft);
+				if (L6.MovimientoIzquierda(nodo)) {
+					nodo--;
+				}
+				break;
+			case 7:
+				playerSprite.setTexture(playerLeft);
+				if (L7.MovimientoIzquierda(nodo)) {
+					nodo--;
+					playerSprite.setTexture(playerLeft);
+				}
+				break;
+			default: {}
+		}
+	}//End of keyboard left
 
 
 	if (Keyboard::isKeyPressed(Keyboard::S) || Keyboard::isKeyPressed(Keyboard::Down)) {
 		system("cls");
-
-		std::string rep = " Down";
+		string rep = " Down";
 		cout << rep << endl;
-		repeticion.push_back(rep);						
-		//SUCEDE LO MISMO QUE PARA SUBIR, SOLO QUE AL CONTRARIA
-														//PREGUNTO SI LA LISTA DE ABAJO ME PERMITE BAJAR
-
-		switch (lista) {			//Switch para saber en cual lista estoy de la 2 a la 7
-
-
-		case 2:	//estoy en lista 2
-
-			switch (L3.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L3.getTipo(nodo);
-				L3.CambiarEstado(nodo, L2.getTipo(nodo));
-				L2.CambiarEstado(nodo, temporal);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			case 2:
-				if (L4.Movimiento(nodo)) {
-					L4.CambiarEstado(nodo, L3.getTipo(nodo));
-					L3.CambiarEstado(nodo, L2.getTipo(nodo));
-					L2.CambiarEstado(nodo, 0);
-					lista++;
-					ElJugador.setTexture(Jugador);
+		repetition += rep;
+	//----------------------- principle switch----------------------------------
+		switch (lista) {
+			case 2:	// list 2
+	//----------------------- sub switch list 2---------------------------------
+				switch (L3.getTipo(nodo)) {
+					case 0:
+						temporal = L3.getTipo(nodo);
+						L3.CambiarEstado(nodo, L2.getTipo(nodo));
+						L2.CambiarEstado(nodo, temporal);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
+					case 2:
+						if (L4.Movimiento(nodo)) {
+							L4.CambiarEstado(nodo, L3.getTipo(nodo));
+							L3.CambiarEstado(nodo, L2.getTipo(nodo));
+							L2.CambiarEstado(nodo, 0);
+							lista++;
+							playerSprite.setTexture(playerDown);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede bajar xq hay un muro" << endl;
+						playerSprite.setTexture(playerDown);
+						break;
+					case 4:
+						L3.CambiarEstado(nodo, L2.getTipo(nodo));
+						L2.CambiarEstado(nodo, 0);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
 				}
-				break;
+	//----------------------- end of sub switch list 2----------------------------
+				break;// list 2
 
-			case 3:
-				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
-				ElJugador.setTexture(Jugador);
-				break;
-
-			case 4:
-
-
-				L3.CambiarEstado(nodo, L2.getTipo(nodo));
-				L2.CambiarEstado(nodo, 0);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-			}	//FIN SWITCH DE LO QUE ME DEVUELVE EL NUMERO DE ABAJO
-
-			break;//break de estoy en lista 2
-
-
-		case 3:		//Case estoy en lista 3
-
-			switch (L4.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L4.getTipo(nodo);
-				L4.CambiarEstado(nodo, L3.getTipo(nodo));
-				L3.CambiarEstado(nodo, temporal);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			case 2:
-				if (L5.Movimiento(nodo)) {
-					L5.CambiarEstado(nodo, L4.getTipo(nodo));
-					L4.CambiarEstado(nodo, L3.getTipo(nodo));
-					L3.CambiarEstado(nodo, 0);
-					lista++;
-					ElJugador.setTexture(Jugador);
+			case 3:	// list 3
+	//-----------------------sub switch list 3------------------------------------
+				switch (L4.getTipo(nodo)) {
+					case 0:
+						temporal = L4.getTipo(nodo);
+						L4.CambiarEstado(nodo, L3.getTipo(nodo));
+						L3.CambiarEstado(nodo, temporal);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
+					case 2:
+						if (L5.Movimiento(nodo)) {
+							L5.CambiarEstado(nodo, L4.getTipo(nodo));
+							L4.CambiarEstado(nodo, L3.getTipo(nodo));
+							L3.CambiarEstado(nodo, 0);
+							lista++;
+							playerSprite.setTexture(playerDown);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede bajar xq hay un muro" << endl;
+						playerSprite.setTexture(playerDown);
+						break;
+					case 4:
+						L4.CambiarEstado(nodo, L3.getTipo(nodo));
+						L3.CambiarEstado(nodo, 0);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
 				}
-				break;
+	//----------------------- end of sub switch list 3-----------------------------
+				break; // list 3
 
-			case 3:
-				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
-				ElJugador.setTexture(Jugador);
-				break;
-
-			case 4:
-
-
-				L4.CambiarEstado(nodo, L3.getTipo(nodo));
-				L3.CambiarEstado(nodo, 0);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			}//FIN DE LO QUE ME DEVUELVE EL NUMERO DE ABAJO
-
-			break; //break estoy en lista 3
-
-
-		case 4: //Estoy en lista 4
-
-			switch (L5.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L5.getTipo(nodo);
-				L5.CambiarEstado(nodo, L4.getTipo(nodo));
-				L4.CambiarEstado(nodo, temporal);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			case 2:
-				if (L6.Movimiento(nodo)) {
-					L6.CambiarEstado(nodo, L5.getTipo(nodo));
-					L5.CambiarEstado(nodo, L4.getTipo(nodo));
-					L4.CambiarEstado(nodo, 0);
-					lista++;
-					ElJugador.setTexture(Jugador);
+			case 4: //list 4
+	//-----------------------sub switch list 4-------------------------------------
+				switch (L5.getTipo(nodo)){
+					case 0:
+						temporal = L5.getTipo(nodo);
+						L5.CambiarEstado(nodo, L4.getTipo(nodo));
+						L4.CambiarEstado(nodo, temporal);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
+					case 2:
+						if (L6.Movimiento(nodo)) {
+							L6.CambiarEstado(nodo, L5.getTipo(nodo));
+							L5.CambiarEstado(nodo, L4.getTipo(nodo));
+							L4.CambiarEstado(nodo, 0);
+							lista++;
+							playerSprite.setTexture(playerDown);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede bajar xq hay un muro" << endl;
+						playerSprite.setTexture(playerDown);
+						break;
+					case 4:
+						L5.CambiarEstado(nodo, L4.getTipo(nodo));
+						L4.CambiarEstado(nodo, 0);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
 				}
-				break;
+	//----------------------- end of sub switch list 4-----------------------------
+				break;// list 4
 
-			case 3:
-				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
-				ElJugador.setTexture(Jugador);
-				break;
+			case 5:// list 5
+	//-----------------------sub switch list 5-------------------------------------
+				switch (L6.getTipo(nodo)){
+					case 0:
+						temporal = L6.getTipo(nodo);
+						L6.CambiarEstado(nodo, L5.getTipo(nodo));
+						L5.CambiarEstado(nodo, temporal);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
+					case 2:
+						if (L7.Movimiento(nodo)) {
+							L7.CambiarEstado(nodo, L6.getTipo(nodo));
+							L6.CambiarEstado(nodo, L5.getTipo(nodo));
+							L5.CambiarEstado(nodo, 0);
+							lista++;
+							playerSprite.setTexture(playerDown);
+						}
+						break;
+					case 3:
+						system("cls");
+						cout << "No se puede bajar xq hay un muro" << endl;
+						break;
+						playerSprite.setTexture(playerDown);
+					case 4:
+						L6.CambiarEstado(nodo, L5.getTipo(nodo));
+						L5.CambiarEstado(nodo, 0);
+						lista++;
+						playerSprite.setTexture(playerDown);
+						break;
+				}
+	//----------------------- end of sub switch list 5-----------------------------
+				break;// list 5
 
-			case 4:
-
-
-				L5.CambiarEstado(nodo, L4.getTipo(nodo));
-				L4.CambiarEstado(nodo, 0);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE Abajo
-			break;//Break Estoy en Lista 4
-
-
-		case 5://estoy en lista 5
-
-
-			switch (L6.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L6.getTipo(nodo);
-				L6.CambiarEstado(nodo, L5.getTipo(nodo));
-				L5.CambiarEstado(nodo, temporal);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			case 2:
-				if (L7.Movimiento(nodo)) {
+			case 6: // list 6
+	//-----------------------sub switch list 6-------------------------------------
+				switch (L7.getTipo(nodo)) {
+				case 0:
+					temporal = L7.getTipo(nodo);
 					L7.CambiarEstado(nodo, L6.getTipo(nodo));
-					L6.CambiarEstado(nodo, L5.getTipo(nodo));
-					L5.CambiarEstado(nodo, 0);
+					L6.CambiarEstado(nodo, temporal);
 					lista++;
-					ElJugador.setTexture(Jugador);
-				}
-				break;
-
-			case 3:
-				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
-				break;
-				ElJugador.setTexture(Jugador);
-
-			case 4:
-
-
-				L6.CambiarEstado(nodo, L5.getTipo(nodo));
-				L5.CambiarEstado(nodo, 0);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE ABAJO
-
-
-			break;//Break estoy en Lista 5
-
-
-		case 6: //Estoy en lista 6
-
-			switch (L7.getTipo(nodo)) {
-
-			case 0:
-
-				temporal = L7.getTipo(nodo);
-				L7.CambiarEstado(nodo, L6.getTipo(nodo));
-				L6.CambiarEstado(nodo, temporal);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-
-			case 2:
-				if (L8.Movimiento(nodo)) {
-					L8.CambiarEstado(nodo, L7.getTipo(nodo));
+					playerSprite.setTexture(playerDown);
+					break;
+				case 2:
+					if (L8.Movimiento(nodo)) {
+						L8.CambiarEstado(nodo, L7.getTipo(nodo));
+						L7.CambiarEstado(nodo, L6.getTipo(nodo));
+						L6.CambiarEstado(nodo, 0);
+						lista++;
+						playerSprite.setTexture(playerDown);
+					}
+					break;
+				case 3:
+					system("cls");
+					cout << "No se puede bajar xq hay un muro" << endl;
+					break;
+					playerSprite.setTexture(playerDown);
+				case 4:
 					L7.CambiarEstado(nodo, L6.getTipo(nodo));
 					L6.CambiarEstado(nodo, 0);
 					lista++;
-					ElJugador.setTexture(Jugador);
+					playerSprite.setTexture(playerDown);
+					break;
 				}
-				break;
+	//----------------------- end of sub switch list 6-----------------------------
+				break;// list 6
 
-			case 3:
+			case 7: // list 7
 				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
-				break;
-				ElJugador.setTexture(Jugador);
-
-			case 4:
-
-
-				L7.CambiarEstado(nodo, L6.getTipo(nodo));
-				L6.CambiarEstado(nodo, 0);
-				lista++;
-				ElJugador.setTexture(Jugador);
-				break;
-
-			}//FIN SWITCH DE LO QUE ME RETORNÓ EL NUMERO DE LA LISTA DE ARRIBA
-
-			break;//Break lista 6
-
-		case 7: //estoy en lista 7
-
-			system("cls");
-			cout << "Abajo hay un muro, no puede bajar" << endl;
-			ElJugador.setTexture(Jugador);
-			break; //Lista 7
-
-		}//FIN SWITCH LISTA EN LA QUE ESTOY
-
-	}//Boton abajo
-
+				cout << "Abajo hay un muro, no puede bajar" << endl;
+				playerSprite.setTexture(playerDown);
+				break; //Lista 7
+		}
+	//-----------------------end of principle switch------------------------------
+	}// End of keyboard down
 
 	if (Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::Right)) {
 		system("cls");
-
-		std::string rep = " Right";
+		string rep = " Right";
 		cout << rep << endl;
-		repeticion.push_back(rep);
+		repetition += rep;
+
+		switch (lista) {	
+			case 2:
+				if (L2.MovimientoDerecha(nodo)) {
+					nodo++;									
+					playerSprite.setTexture(playerRight);
+				}
+				break;
+			case 3:
+				if (L3.MovimientoDerecha(nodo)) {
+					nodo++;
+					playerSprite.setTexture(playerRight);
+				}
+				break;
+			case 4:
+				if (L4.MovimientoDerecha(nodo)) {
+					nodo++;
+					playerSprite.setTexture(playerRight);
+				}
+				break;
+			case 5:
+				if (L5.MovimientoDerecha(nodo)) {
+					nodo++;
+					playerSprite.setTexture(playerRight);
+				}
+				break;
+			case 6:
+				if (L6.MovimientoDerecha(nodo)) {
+					nodo++;
+					playerSprite.setTexture(playerRight);
+				}
+				break;
+			case 7:
+				if (L7.MovimientoDerecha(nodo)) {
+					nodo++;
+					playerSprite.setTexture(playerRight);
+				}
+				break;
+			default: {}
+		}
+	}// end of keyboard right
 
 
-		switch (lista) {			//SABER EN QUE LISTA ESTOY
-
-		case 2:
-			if (L2.MovimientoDerecha(nodo)) {			//PREGUNTO A LA LISTA SI ME PUEDO MOVER, RETORNA TRUE SI SÍ o FALSE SI NO
-				nodo++;									//ME MUEVO UNA POSICION A LA DERECHA
-				ElJugador.setTexture(JugadorDer);
-			}
-
-			break;
-
-		case 3:
-			if (L3.MovimientoDerecha(nodo)) {
-				nodo++;
-				ElJugador.setTexture(JugadorDer);
-			}
-			break;
-
-		case 4:
-			if (L4.MovimientoDerecha(nodo)) {
-				nodo++;
-				ElJugador.setTexture(JugadorDer);
-			}
-
-			break;
-
-		case 5:
-			if (L5.MovimientoDerecha(nodo)) {
-				nodo++;
-				ElJugador.setTexture(JugadorDer);
-			}
-
-			break;
-
-		case 6:
-			if (L6.MovimientoDerecha(nodo)) {
-				nodo++;
-				ElJugador.setTexture(JugadorDer);
-			}
-
-			break;
-
-		case 7:
-			if (L7.MovimientoDerecha(nodo)) {
-				nodo++;
-				ElJugador.setTexture(JugadorDer);
-			}
-
-			break;
-
-		default: {}
-		}//fin switch
-
-	}//fin boton presionado derecha
-
-	 //PRESIONAR PARA REINICIAR
-	if (Keyboard::isKeyPressed(Keyboard::LShift)){
-		deleteReplay();
-		for (int i = 0; i < 9; i++) {			//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
-
+	if (Keyboard::isKeyPressed(Keyboard::LShift)){// restard the game
+		for (int i = 0; i < 9; i++) {			
 			L1.Borrar();
 			L2.Borrar();
 			L3.Borrar();
@@ -822,13 +678,11 @@ void Ventana::LosEventos() {
 		}
 		system("cls");
 		cout << "Se ha reiniciado el nivel" << endl;
-		LlenarListas();							//SE VUELVEN A LLENAR LAS LISTAS
-	}
+		LlenarListas();
+	}// end of keyboard left shift
 
-	if (Keyboard::isKeyPressed(Keyboard::BackSpace)){ //SE RETORNA AL MENU PRINCIPAL BORRANDO TODAS LAS LISTAS
-		deleteReplay();
+	if (Keyboard::isKeyPressed(Keyboard::BackSpace)){ // go to menu
 		for (int i = 0; i < 9; i++) {
-
 			L1.Borrar();
 			L2.Borrar();
 			L3.Borrar();
@@ -838,202 +692,42 @@ void Ventana::LosEventos() {
 			L7.Borrar();
 			L8.Borrar();
 		}
-
 		completo1 = false;
 		completo2 = false;
 		completo3 = false;
 		completo4 = false;
 		completo5 = false;
 		iniciarMenu();
-	}
+	}// end of keyboard backspace
 
-	if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-		VentanaPrincipal.close();					//SE CIERRA LA VENTANA Y SE SALE DEL JUEGO
-	}
-
-}
+	if (Keyboard::isKeyPressed(Keyboard::Escape)){ // close the game
+		VentanaPrincipal.close();					
+	}// end of keyboard escape
+}// end of movements
 
 
 void Ventana::update() 
 {
 
-	if (!completo1) 
-	{
-		completo1 = ListaGanadora.ganar(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 1 SE COMPLETÓ
-		if (completo1) {											//SI ES ASÍ
-			for (int i = 0; i < 9; i++)
-			{							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
-
-				L1.Borrar();
-				L2.Borrar();
-				L3.Borrar();
-				L4.Borrar();
-				L5.Borrar();
-				L6.Borrar();
-				L7.Borrar();
-				L8.Borrar();
-			}
-			int opc;
-			cout << "Digite la opci"<<char(162)<<"n que desee realizar?" << endl;
-			cout << "[1]. Avanzar al siguiente nivel" << endl;
-			cout << "[2]. Ver repetici"<<char(162)<< "n" << endl;
-			cin >> opc;
-			while (cin.fail()) // si falla
-			{
-				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
-				Sleep(1500);
-				cin.clear();
-				cin.ignore(500, '\n'); // limpio buffer
-			}
-			
-			if (opc == 1)
-			{
-				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
-				return;
-			}
-			else if (opc == 2)
-			{
-				replay();
-				LlenarListas();									
-				return;
-			}
-	
-		}
-	}//NIVEL 1 COMPLETO
-
-	else if (!completo2) {									//SI EL NIVEL 2 NO HA SIDO COMPLETADO
-
-		
-		completo2 = ListaGanadora.ganar2(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 2 SE COMPLETÓ
-		if (completo2) {											//SI ES ASÍ
-			for (int i = 0; i < 9; i++) {							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
-
-				L1.Borrar();
-				L2.Borrar();
-				L3.Borrar();
-				L4.Borrar();
-				L5.Borrar();
-				L6.Borrar();
-				L7.Borrar();
-				L8.Borrar();
-			}
-			int opc;
-			cout << "Digite la opci" << char(162) << "n que desee realizar?" << endl;
-			cout << "[1]. Avanzar al siguiente nivel" << endl;
-			cout << "[2]. Ver repetici" << char(162) << "n" << endl;
-			cin >> opc;
-			while (cin.fail()) // si falla
-			{
-				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
-				Sleep(1500);
-				cin.clear();
-				cin.ignore(500, '\n'); // limpio buffer
-			}
-
-			if (opc == 1)
-			{
-				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
-				return;
-			}
-			else if (opc == 2)
-			{
-				replay();
-				LlenarListas();
-				return;
-			}
-		}
-	}//NIVEL 2 COMPLETO
-
-	else if (!completo3) {
-
-		
+	if (!completo1){
+		completo1 = ListaGanadora.ganar(ListaGanadora, ganar1);
+		nextLevel(completo1);
+	}// level 1 complete
+	else if (!completo2){	
+		completo2 = ListaGanadora.ganar2(ListaGanadora, ganar1);	
+		nextLevel(completo2);
+	}// level 2 complete
+	else if (!completo3){
 		completo3 = ListaGanadora.ganar2(ListaGanadora, ganar1);
-		if (completo3) {
-			for (int i = 0; i < 9; i++) {
-
-				L1.Borrar();
-				L2.Borrar();
-				L3.Borrar();
-				L4.Borrar();
-				L5.Borrar();
-				L6.Borrar();
-				L7.Borrar();
-				L8.Borrar();
-			}
-			int opc;
-			cout << "Digite la opci" << char(162) << "n que desee realizar?" << endl;
-			cout << "[1]. Avanzar al siguiente nivel" << endl;
-			cout << "[2]. Ver repetici" << char(162) << "n" << endl;
-			cin >> opc;
-			while (cin.fail()) // si falla
-			{
-				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
-				Sleep(1500);
-				cin.clear();
-				cin.ignore(500, '\n'); // limpio buffer
-			}
-
-			if (opc == 1)
-			{
-				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
-				return;
-			}
-			else if (opc == 2)
-			{
-				replay();
-				LlenarListas();
-				return;
-			}
-		}
-	}
+		nextLevel(completo3);
+	}// level 3 complete
 	else if (!completo4) {
-
-		
 		completo4 = ListaGanadora.ganar(ListaGanadora, ganar1);
-		if (completo4) {
-			for (int i = 0; i < 9; i++) {
-
-				L1.Borrar();
-				L2.Borrar();
-				L3.Borrar();
-				L4.Borrar();
-				L5.Borrar();
-				L6.Borrar();
-				L7.Borrar();
-				L8.Borrar();
-			}
-			int opc;
-
-			cout << "Digite la opci" << char(162) << "n que desee realizar?" << endl;
-			cout << "[1]. Avanzar al siguiente nivel" << endl;
-			cout << "[2]. Ver repetici" << char(162) << "n" << endl;
-			cin >> opc;
-			while (cin.fail()) // si falla
-			{
-				cout << "\rPor favor digite una opcion valida"; // doy este mensaje
-				Sleep(1500);
-				cin.clear();
-				cin.ignore(500, '\n'); // limpio buffer
-			}
-
-			if (opc == 1)
-			{
-				LlenarListas();									//SE VUELVE A LLENAR LAS LISTAS CON EL NIVEL 1 COMPLETO
-				return;
-			}
-			else if (opc == 2)
-			{
-				replay();
-				LlenarListas();
-				return;
-			}
-		}
-	}
+		nextLevel(completo4);
+	}// level 4 complete
 	else if (!completo5) {
-
 		completo5 = ListaGanadora.ganar(ListaGanadora, ganar1);
-
-	}
+	}// level 5 complete
 	else if (completo5) {
 		system("cls");
 		cout << "HAS COMPLETADO TODOS LO NIVELES!!!!" << endl << endl;
@@ -1049,7 +743,6 @@ void Ventana::update()
 			L7.Borrar();
 			L8.Borrar();
 		}
-
 		completo1 = false;
 		completo2 = false;
 		completo3 = false;
@@ -1057,17 +750,13 @@ void Ventana::update()
 		completo5 = false;
 		iniciarMenu();
 	}
-
-
-}
+}// end of update
 
 void Ventana::render() {
 
 	VentanaPrincipal.clear(Color(250, 235, 215));
-	
-	PokemonRed.setPosition(600.f, 125.f);
-
-	VentanaPrincipal.draw(PokemonRed);
+	pokemonRed.setPosition(600.f, 125.f);
+	VentanaPrincipal.draw(pokemonRed);
 
 	int x = 0;// use as a coordinate to paint each frame
 
@@ -1099,26 +788,19 @@ void Ventana::render() {
 	}
 	
 	VentanaPrincipal.draw(Level);// prints the level's number
-
 	VentanaPrincipal.display();
 }// end of render
 
 void Ventana::run() {
 
 	initializeWindow();
-
 	while (VentanaPrincipal.isOpen()){
-		LosEventos();
+		movements();
 		update();
 		render();
 	}
-	cleared();
-}
-
-void Ventana::cleared() {
 	VentanaPrincipal.close();
 }
-
 
 void Ventana::LlenarListas() {
 
@@ -1602,8 +1284,6 @@ void Ventana::LlenarListas() {
 		}
 
 	}//NIVEL 5 COMPLETADO
-
-
 }
 
 void Ventana::setCompleto1() {
@@ -1660,12 +1340,10 @@ void Ventana::iniciarMenu() {
 
 				case sf::Keyboard::Return:
 
-					switch (menu.GetPressedItem())
-					{
+					switch (menu.GetPressedItem()){
 					case 0:
 						run();
 						break;
-
 					case 1:
 						int opc;
 						system("cls");
@@ -1688,88 +1366,71 @@ void Ventana::iniciarMenu() {
 						}
 						else {
 							switch (opc) {
-
-							case 1:
-
-								run();
-								break;
-
-							case 2:
-
-								setCompleto1();
-								run();
-								break;
-
-							case 3:
-								setCompleto1();
-								setCompleto2();
-
-								run();
-								break;
-
-							case 4:
-								setCompleto1();
-								setCompleto2();
-								setCompleto3();
-								run();
-								break;
-
-							case 5:
-								setCompleto1();
-								setCompleto2();
-								setCompleto3();
-								setCompleto4();
-								run();
-								break;
+								case 1:
+									run();
+									break;
+								case 2:
+									setCompleto1();
+									run();
+									break;
+								case 3:
+									setCompleto1();
+									setCompleto2();
+									run();
+									break;
+								case 4:
+									setCompleto1();
+									setCompleto2();
+									setCompleto3();
+									run();
+									break;
+								case 5:
+									setCompleto1();
+									setCompleto2();
+									setCompleto3();
+									setCompleto4();
+									run();
+									break;
+								}
 							}
-						}
-
-						break;
-
-					case 2:
-						VentanaPrincipal.close();
-						break;
+							break;
+						case 2:
+							VentanaPrincipal.close();
+							break;
 					}
-
 					break;
 				}
-
 				break;
 			case sf::Event::Closed:
 				VentanaPrincipal.close();
-
 				break;
-
 			}
 		}
-
 		VentanaPrincipal.clear(Color(72, 61,139));
-		
 
 		menu.draw(VentanaPrincipal);
 		VentanaPrincipal.display();
 	}
-
 }
 
-int Ventana::validarEntrada() {
+int Ventana::validarEntrada(){
 	int val;
 	try {
 		int x = 0;
 		while (x == 0) {
-
 			if (!(cin >> val)) {
 				cout << "Nivel seleccionado no existe, Por favor selecciona un nivel posible" << endl; cin.get();
 				cin.clear();
 				cin.ignore(255, '\n');
-			}
+			}// end if
 			else {
 				x = 1;
 				throw val;
-			}
-
-		}
-	}
-	catch (int i) { return i; }
+			}// end else
+		}// end while
+	}// end try
+	catch (int i){
+		return i;
+	}// end catch
 	return val;
 }

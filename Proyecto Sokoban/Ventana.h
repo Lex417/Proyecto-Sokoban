@@ -2,86 +2,84 @@
 //--------------------------
 #include "Lista.h"
 #include "Menu.h"
-
+#include "TexturesSprites.h"
 //--------------------------
 #include <sstream>
 #include <fstream>
 #include <Windows.h>
 #include <cstdlib>
 #include <iostream>
-#include <vector>
 //--------------------------
 using namespace sf;
-using std::cout;
-using std::endl;
-using std::cin;
-using std::ifstream;
-using std::ios;
-using std::string;
-using std::vector;
+using namespace std;
 //--------------------------
 class Ventana {
-private:
 
-	RenderWindow VentanaPrincipal;
-	Texture Pared;
-	Texture Caja;
-	Texture Jugador;
-	Texture JugadorArriba;
-	Texture JugadorDer;
-	Texture JugadorIzq;
-	Texture PuntoGanar;
-	Texture EspacioLibre;
-	Texture Red;
+	public:
 
-	Sprite LaPared;
-	Sprite LaCaja;
-	Sprite ElJugador;
-	Sprite Ganar;
-	Sprite Disponible;
-	Sprite PokemonRed;
-	Font font;
-	Text opciones[4];
-	Text Level;
+		Ventana();
 
-	Event eventos;
+		void paintLevel(int,Lista,int);
+		int initializeWindow();
+		void nextLevel(bool);
+		void movements();
+		void update();
+		void render();
+		void run();
 
-	Lista L1;
-	Lista L2;
-	Lista L3;
-	Lista L4;
-	Lista L5;
-	Lista L6;
-	Lista L7;
-	Lista L8;
-	Lista ListaGanadora;
+		void setCompleto1();
+		void setCompleto2();
+		void setCompleto3();
+		void setCompleto4();
+		void setCompleto5();
+
+		void LlenarListas();
+		int validarEntrada();
+		void iniciarMenu();
+
+	private:
+
+		RenderWindow VentanaPrincipal;
+//--------------------Textures------------------------
+		Texture wall;
+		Texture emptySpace;
+		Texture box;
+		Texture playerDown;
+		Texture playerUp;
+		Texture playerRight;
+		Texture playerLeft;
+		Texture winnigPoints;
+		Texture red;
+//--------------------Sprites------------------------
+		Sprite wallsSprite;
+		Sprite boxesSprite;
+		Sprite playerSprite;
+		Sprite winnigSprite;
+		Sprite emptySprite;
+		Sprite pokemonRed;
+//--------------------Texts------------------------
+		Text opciones[4];
+		Text Level;
+//--------------------Font------------------------
+		Font font;
+//--------------------Event------------------------
+		Event eventos;
+//--------------------Listas------------------------
+		Lista L1;
+		Lista L2;
+		Lista L3;
+		Lista L4;
+		Lista L5;
+		Lista L6;
+		Lista L7;
+		Lista L8;
+		Lista ListaGanadora;
 
 
-	int lista, nodo, temporal, ganar1;
-	bool completo1, completo2, completo3, completo4, completo5;
-	vector <string> repeticion;
+		int lista, nodo, temporal, ganar1;
 
-public:
+		bool completo1, completo2, completo3, completo4, completo5;
 
-	Ventana();
-
-	void paintLevel(int,Lista,int);
-	int initializeWindow();
-
-	void LosEventos();
-	void update();
-	void render();
-	void cleared();
-	void run();
-	void setCompleto1();
-	void setCompleto2();
-	void setCompleto3();
-	void setCompleto4();
-	void setCompleto5();
-	void LlenarListas();
-	int validarEntrada();
-	void iniciarMenu();
-	void replay();
-	void deleteReplay();
+		string repetition;// repetition
 
 };
