@@ -214,12 +214,7 @@ bool Lista::ganar(Lista L, int numero)
 				cout << " Felicidades !! Has completado el nivel!" << endl;	
 				return true;							//EL NIVEL PASA A ESTAR COMPLETO
 			}
-			else if (temp->objectID == 2 && temp->prev->prev->objectID == 2)
-			{
-				system("cls");
-				cout << " Felicidades !! Has completado el nivel!" << endl;
-				return true;
-			}
+			
 
 			else 
 				return false;		//SI NO SIGUE ESTANDO INCOMPLETO
@@ -231,9 +226,9 @@ bool Lista::ganar(Lista L, int numero)
 
 }
 
+
 bool Lista::ganar2(Lista L, int numero) 
 {
-
 
 	temp = first;
 
@@ -256,7 +251,34 @@ bool Lista::ganar2(Lista L, int numero)
 	}
 	return false;
 
-}		
+}	
+
+
+bool Lista::ganar3(Lista L, int numero)
+{		
+
+	temp = first;
+
+	for (int i = 1; i < 9; i++) {			//VOY RECCORIENDO LOS NODOS
+		if (i == numero)
+		{
+			if (temp->objectID == 2 && temp->prev->prev->objectID == 2)
+			{
+				system("cls");
+				cout << " Felicidades !! Has completado el nivel!" << endl;
+				return true;
+			}
+
+			else
+				return false;		//SI NO SIGUE ESTANDO INCOMPLETO
+
+		}
+		temp = temp->next;
+	}
+	return false;
+
+	 
+}
 void Lista::Borrar()
 {
 

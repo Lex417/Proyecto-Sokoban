@@ -27,6 +27,7 @@ public:
 	void Borrar();
 	bool ganar(Lista, int);
 	bool ganar2(Lista, int);
+	bool ganar3(Lista, int);
 
 
 private:

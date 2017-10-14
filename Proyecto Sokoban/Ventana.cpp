@@ -83,7 +83,7 @@ int Ventana::initializeWindow() {
 	VentanaPrincipal.setVerticalSyncEnabled(true);		//Pantalla no parpadee cuando se actualice
 	VentanaPrincipal.setKeyRepeatEnabled(false);		//Evitar que se realicen muchas acciones al presionar un boton
 
-	if (!Pared.loadFromFile("Wall_Brown.png")) {			//Si no logran cargarse las texturas
+	if (!Pared.loadFromFile("wall.jpg")) {			//Si no logran cargarse las texturas
 		cout << "No se ha encontrado la imagen&pause";
 		return -1;
 	}
@@ -95,7 +95,7 @@ int Ventana::initializeWindow() {
 	}
 	Disponible.setTexture(EspacioLibre);
 
-	if (!Caja.loadFromFile("Crate_Red.png")) {
+	if (!Caja.loadFromFile("CrateDark_Red.png")) {
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
@@ -123,7 +123,7 @@ int Ventana::initializeWindow() {
 	}
 
 
-	if (!PuntoGanar.loadFromFile("EndPoint_Red.png")) {
+	if (!PuntoGanar.loadFromFile("endpoint.png")) {
 		system("No se ha encontrado la imagen&pause");
 		return EXIT_FAILURE;
 	}
@@ -197,7 +197,6 @@ void Ventana::LosEventos() {
 
 		case 2:	//estoy en lista 2
 			system("cls");
-			cout << "Arriba hay un muro, no se puede mover" << endl;
 			ElJugador.setTexture(JugadorArriba);
 			break;
 
@@ -229,7 +228,6 @@ void Ventana::LosEventos() {
 
 			case 3:													//Si es un 3 (Un Muro)
 				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;		//No se puede mover
 				ElJugador.setTexture(JugadorArriba);
 				break;
 
@@ -274,7 +272,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
 				ElJugador.setTexture(JugadorArriba);
 				break;
 
@@ -320,7 +317,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
 				ElJugador.setTexture(JugadorArriba);
 				break;
 
@@ -365,7 +361,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
 				ElJugador.setTexture(JugadorArriba);
 				break;
 
@@ -411,7 +406,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede subir xq hay un muro" << endl;
 				ElJugador.setTexture(JugadorArriba);
 				break;
 
@@ -535,7 +529,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
 				ElJugador.setTexture(Jugador);
 				break;
 
@@ -579,7 +572,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
 				ElJugador.setTexture(Jugador);
 				break;
 
@@ -624,7 +616,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
 				ElJugador.setTexture(Jugador);
 				break;
 
@@ -669,7 +660,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
 				break;
 				ElJugador.setTexture(Jugador);
 
@@ -715,7 +705,6 @@ void Ventana::LosEventos() {
 
 			case 3:
 				system("cls");
-				cout << "No se puede bajar xq hay un muro" << endl;
 				break;
 				ElJugador.setTexture(Jugador);
 
@@ -735,7 +724,6 @@ void Ventana::LosEventos() {
 		case 7: //estoy en lista 7
 
 			system("cls");
-			cout << "Abajo hay un muro, no puede bajar" << endl;
 			ElJugador.setTexture(Jugador);
 			break; //Lista 7
 
@@ -859,7 +847,7 @@ void Ventana::update()
 
 	if (!completo1) 
 	{
-		completo1 = ListaGanadora.ganar(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 1 SE COMPLETÓ
+		completo1 = ListaGanadora.ganar3(ListaGanadora, ganar1);		//SE PREGUNTA SI EL NIVEL 1 SE COMPLETÓ
 		if (completo1) {											//SI ES ASÍ
 			for (int i = 0; i < 9; i++)
 			{							//SE BORRAN TODAS LAS LISTAS, SI NO SE HICIERA SE AÑADERIAN MÁS NODOS
@@ -1063,7 +1051,7 @@ void Ventana::update()
 
 void Ventana::render() {
 
-	VentanaPrincipal.clear(Color(250, 235, 215));
+	VentanaPrincipal.clear(Color(205 ,201 , 201));
 	
 	PokemonRed.setPosition(600.f, 125.f);
 
