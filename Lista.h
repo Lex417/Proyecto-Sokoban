@@ -1,20 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "Objects.h"
 
 using namespace sf;
-using std::cout;
-using std::endl;
-
+using namespace std;
 
 struct Nodo {
-
 	int objectID;
 	Nodo *next;
-	Nodo *prev;
-					//LOS NODOS SOLO TENDRAN UN NUMERO Y DEPENDE DE ESTE SE PINTARÁ EN LA VENTANA
+	Nodo *prev;	
 };
 
-class Lista {
+class Lista : public Objects {
 
 public:
 	Lista();
