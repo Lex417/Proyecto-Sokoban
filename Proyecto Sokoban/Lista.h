@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+ï»¿#include <SFML/Graphics.hpp>
 #include <iostream>
 
 using namespace sf;
@@ -11,7 +11,7 @@ struct Nodo {
 	int objectID;
 	Nodo *next;
 	Nodo *prev;
-					//LOS NODOS SOLO TENDRAN UN NUMERO Y DEPENDE DE ESTE SE PINTARÁ EN LA VENTANA
+	//LOS NODOS SOLO TENDRAN UN NUMERO Y DEPENDE DE ESTE SE PINTARï¿½ EN LA VENTANA
 };
 
 class Lista {
@@ -19,19 +19,20 @@ class Lista {
 public:
 	Lista();
 	void insert(int i);
-	int getTipo(int);
-	bool Movimiento(int);
-	bool MovimientoDerecha(int);
-	bool MovimientoIzquierda(int);
+	int getObject(int);
+	bool movements(int);
+	bool movementsR(int);
+	bool movementsL(int);
 	void CambiarEstado(int, int);
-	void Borrar();
+	void deleteList();
+
 	bool ganar(Lista, int);
 	bool ganar2(Lista, int);
 	bool ganar3(Lista, int);
 
 
 private:
-	Nodo *first;
+	Nodo *head;
 	Nodo *temp;
 
 };

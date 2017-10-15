@@ -3,7 +3,7 @@
 int main()
 {
 	Ventana ventana;
-	ventana.iniciarMenu();
+	ventana.initiateMenu();
 
 	return 0;
 }
