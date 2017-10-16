@@ -10,7 +10,7 @@ Menu::Menu(float ancho, float largo)
 	}
 
 	
-	if (!background.loadFromFile("City.png"))
+	if (!background.loadFromFile("Sprites/City.png"))
 	{
 		system("No se ha encontrado el font&pause");
 	}

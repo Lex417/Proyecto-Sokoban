@@ -1,9 +1,9 @@
-#include "Ventana.h"
+#include "Interface.h"
 
 int main()
 {
-	Ventana ventana;
-	ventana.initiateMenu();
+	Interface myInterface;
+	myInterface.initiateMenu();
 
 	return 0;
 }
