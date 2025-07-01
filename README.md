@@ -4,7 +4,10 @@
 
 This project is an implementation of the classic puzzle game "Sokoban," developed as part of the **Data Structures (EIF207)** course at **Universidad Nacional, Costa Rica**, in **October 2017**. It was a collaborative effort by **Leonardo Hidalgo Fonseca** and **Enzo Darío Quesada Rojas**, aimed at applying fundamental data structures and algorithms in a practical, graphical context.
 
-The goal of Sokoban is simple yet challenging: guide a character to push boxes onto designated target points within a confined maze. This particular implementation features multiple levels, intuitive controls, and a custom graphical interface.
+The goal of Sokoban is simple yet challenging: guide a character to push boxes onto designated target points within a confined maze. This particular implementation features multiple levels, intuitive controls, and a custom graphical interface
+
+<img src="https://github.com/user-attachments/assets/cad54982-73ae-4ef8-888a-94f7ded4b491" width="500" alt="game">
+
 
 ## 🎮 Gameplay & Features
 
@@ -36,7 +39,18 @@ The game maps are dynamically represented using a system of **linked lists**. Sp
 
 * `2 = Box`
 
+
 * `3 = Wall`
+
+![front](https://github.com/user-attachments/assets/c188ef6d-cdc9-47a5-9a2c-20b48eb4b1dc)
+![back](https://github.com/user-attachments/assets/7d023973-52a1-4f99-a11d-439f5c32d4c6)
+![right](https://github.com/user-attachments/assets/65e30431-f37f-40ff-9756-f340621d2134)
+![left](https://github.com/user-attachments/assets/526640ef-2d80-401b-a7e5-cbad3b436ea7)
+![wall](https://github.com/user-attachments/assets/fd14976a-f933-4e27-9650-0581b4f2f855)
+![floor](https://github.com/user-attachments/assets/839de91e-54ca-4bfa-9687-12b5864c88e3)
+![box](https://github.com/user-attachments/assets/1580f704-515e-4eeb-8227-268950ba1ac8)
+![point](https://github.com/user-attachments/assets/252dda5b-ef82-4643-9b84-bfad95296442)
+
 
 * `4 = Goal Point`
 
